@@ -15,13 +15,13 @@ window.addEventListener("DOMContentLoaded", () => {
     let ctx = canvas.getContext("2d");
 
     let snake = new Snake(ctx, 4);
+    let food = new Food(ctx);
 
     let gameLoop = setInterval(() => {
         ctx.fillStyle = 'lightgrey';
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
         ctx.strokeStyle = 'black';
         ctx.strokeRect(0, 0, canvasWidth, canvasHeight);
-
 
         let tailX = snake.tail[0].x;
         let tailY = snake.tail[0].y;
@@ -49,6 +49,11 @@ window.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        if (food.position !== undefined && food.position.x === tailX && food.position.y === tailY) {
+            food.relocate();
+        } else {
+            food.locate();
+        }
         snake.move(tailX, tailY);
     }, 50);
 
@@ -90,6 +95,46 @@ class Point {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+    }
+}
+
+class Food {
+    constructor(context, size = 10) {
+        this.ctx = context;
+        this.size = size;
+    }
+
+    draw(position) {
+        this.position = position;
+
+        let ctx = this.ctx;
+        let size = this.size;
+
+        ctx.fillStyle = 'orange';
+        ctx.fillRect(position.x * size, position.y * size, size, size);
+        // This is the border of the square
+        ctx.strokeStyle = 'darkgreen';
+        ctx.strokeRect(position.x * size, position.y * size, size, size);
+    }
+
+    relocate() {
+        let availableSpace = (500 - this.size) / this.size;
+
+        let x = Math.round(Math.random() * availableSpace);
+        let y = Math.round(Math.random() * availableSpace);
+
+        this.position = new Point(x, y);
+
+        this.draw(this.position);
+    }
+
+    locate() {
+        let position = this.position;
+        if (position !== undefined) {
+            this.draw(position);
+        } else {
+            this.relocate();
+        }
     }
 }
 
