@@ -50,11 +50,12 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         if (food.position !== undefined && food.position.x === tailX && food.position.y === tailY) {
+            snake.grow(tailX, tailY);
             food.relocate();
         } else {
+            snake.move(tailX, tailY);
             food.locate();
         }
-        snake.move(tailX, tailY);
     }, 50);
 
     document.onkeydown = (event) => {
@@ -174,8 +175,17 @@ class Snake {
         this._direction = direction;
     }
 
-    grow() {
-        this._length += 1;
+    grow(x, y) {
+        let tailPeak = new Point(x, y);
+
+        this._tail.unshift(tailPeak);
+
+        let tail = this._tail;
+        this._length = tail.length;
+
+        for (let i = 0; i < tail.length; i++) {
+            this.draw(tail[i].x, tail[i].y);
+        }
     }
 
     draw(x, y) {
