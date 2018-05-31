@@ -13,7 +13,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let canvasWidth = canvas.width;
     let canvasHeight = canvas.height;
     let ctx = canvas.getContext("2d");
-
+    let score = 0;
     let snake = new Snake(ctx, 4);
     let food = new Food(ctx);
 
@@ -52,10 +52,13 @@ window.addEventListener("DOMContentLoaded", () => {
         if (food.position !== undefined && food.position.x === tailX && food.position.y === tailY) {
             snake.grow(tailX, tailY);
             food.relocate();
+            score++;
         } else {
             snake.move(tailX, tailY);
             food.locate();
         }
+
+        drawText(ctx, score);
     }, 50);
 
     document.onkeydown = (event) => {
@@ -91,6 +94,11 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     };
 });
+
+function drawText(ctx, value) {
+    ctx.font = "16px Arial";
+    ctx.fillText(`Your score is ${value}`, 10, 2§0);
+}
 
 class Point {
     constructor(x, y) {
