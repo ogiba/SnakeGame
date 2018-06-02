@@ -16,84 +16,97 @@ window.addEventListener("DOMContentLoaded", () => {
     let score = 0;
     let snake = new Snake(ctx, 4);
     let food = new Food(ctx);
+    let gameSpeed = 100;
 
-    let gameLoop = setInterval(() => {
-        ctx.fillStyle = 'lightgrey';
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        ctx.strokeStyle = 'black';
-        ctx.strokeRect(0, 0, canvasWidth, canvasHeight);
+    gameThread(gameSpeed);
+    handleKeyEvents();
 
-        let tailX = snake.tail[0].x;
-        let tailY = snake.tail[0].y;
+    function gameThread(speed) {
+        let gameLoop = setInterval(() => {
+            ctx.fillStyle = 'lightgrey';
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            ctx.strokeStyle = 'black';
+            ctx.strokeRect(0, 0, canvasWidth, canvasHeight);
 
-        switch (direction) {
-            case MoveDirection.RIGHT:
-                tailX++;
-                break;
-            case MoveDirection.DOWN:
-                tailY++;
-                break;
-            case MoveDirection.UP:
-                tailY--;
-                break;
-            case MoveDirection.LEFT:
-                tailX--;
-                break;
-        }
+            let tailX = snake.tail[0].x;
+            let tailY = snake.tail[0].y;
 
-        if (tailX === -1
-            || tailX === canvasWidth / snakeSize
-            || tailY === -1
-            || tailY === canvasHeight / snakeSize
-            || checkCollision(snake, new Point(tailX, tailY))) {
-            clearInterval(gameLoop);
-            return;
-        }
+            switch (direction) {
+                case MoveDirection.RIGHT:
+                    tailX++;
+                    break;
+                case MoveDirection.DOWN:
+                    tailY++;
+                    break;
+                case MoveDirection.UP:
+                    tailY--;
+                    break;
+                case MoveDirection.LEFT:
+                    tailX--;
+                    break;
+            }
 
-        if (food.position !== undefined && food.position.x === tailX && food.position.y === tailY) {
-            snake.grow(tailX, tailY);
-            food.relocate();
-            score++;
-        } else {
-            snake.move(tailX, tailY);
-            food.locate();
-        }
+            if (tailX === -1
+                || tailX === canvasWidth / snakeSize
+                || tailY === -1
+                || tailY === canvasHeight / snakeSize
+                || checkCollision(snake, new Point(tailX, tailY))) {
+                clearInterval(gameLoop);
+                return;
+            }
 
-        drawText(ctx, score);
-    }, 50);
+            if (food.position !== undefined && food.position.x === tailX && food.position.y === tailY) {
+                snake.grow(tailX, tailY);
+                food.relocate();
+                score++;
+            } else {
+                snake.move(tailX, tailY);
+                food.locate();
+            }
 
-    document.onkeydown = (event) => {
-        switch (event.keyCode) {
+            drawText(ctx, score);
 
-            case 37:
-                if (direction !== MoveDirection.RIGHT) {
-                    direction = MoveDirection.LEFT;
-                }
-                console.log(direction);
-                break;
+            if (score === 10 && gameSpeed > 50) {
+                clearInterval(gameLoop);
+                gameThread(50);
+            }
+        }, speed);
+    }
 
-            case 39:
-                if (direction !== MoveDirection.LEFT) {
-                    direction = MoveDirection.RIGHT;
+    function handleKeyEvents() {
+        document.onkeydown = (event) => {
+            switch (event.keyCode) {
+
+                case 37:
+                    if (direction !== MoveDirection.RIGHT) {
+                        direction = MoveDirection.LEFT;
+                    }
                     console.log(direction);
-                }
-                break;
+                    break;
 
-            case 38:
-                if (direction !== MoveDirection.DOWN) {
-                    direction = MoveDirection.UP;
-                    console.log(direction);
-                }
-                break;
+                case 39:
+                    if (direction !== MoveDirection.LEFT) {
+                        direction = MoveDirection.RIGHT;
+                        console.log(direction);
+                    }
+                    break;
 
-            case 40:
-                if (direction !== MoveDirection.UP) {
-                    direction = MoveDirection.DOWN;
-                    console.log(direction);
-                }
-                break;
-        }
-    };
+                case 38:
+                    if (direction !== MoveDirection.DOWN) {
+                        direction = MoveDirection.UP;
+                        console.log(direction);
+                    }
+                    break;
+
+                case 40:
+                    if (direction !== MoveDirection.UP) {
+                        direction = MoveDirection.DOWN;
+                        console.log(direction);
+                    }
+                    break;
+            }
+        };
+    }
 });
 
 function checkCollision(snake, point) {
@@ -102,7 +115,6 @@ function checkCollision(snake, point) {
     snake.tail.forEach(itemPoint => {
         if (itemPoint.x === point.x && itemPoint.y === point.y) {
             collisionDetected = true;
-            return;
         }
     });
 
@@ -111,6 +123,7 @@ function checkCollision(snake, point) {
 
 function drawText(ctx, value) {
     ctx.font = "16px Arial";
+    ctx.fillStyle = "black";
     ctx.fillText(`Your score is ${value}`, 10, 20);
 }
 
