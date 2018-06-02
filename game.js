@@ -44,7 +44,8 @@ window.addEventListener("DOMContentLoaded", () => {
         if (tailX === -1
             || tailX === canvasWidth / snakeSize
             || tailY === -1
-            || tailY === canvasHeight / snakeSize) {
+            || tailY === canvasHeight / snakeSize
+            || checkCollision(snake, new Point(tailX, tailY))) {
             clearInterval(gameLoop);
             return;
         }
@@ -95,9 +96,22 @@ window.addEventListener("DOMContentLoaded", () => {
     };
 });
 
+function checkCollision(snake, point) {
+    let collisionDetected = false;
+
+    snake.tail.forEach(itemPoint => {
+        if (itemPoint.x === point.x && itemPoint.y === point.y) {
+            collisionDetected = true;
+            return;
+        }
+    });
+
+    return collisionDetected;
+}
+
 function drawText(ctx, value) {
     ctx.font = "16px Arial";
-    ctx.fillText(`Your score is ${value}`, 10, 2§0);
+    ctx.fillText(`Your score is ${value}`, 10, 20);
 }
 
 class Point {
