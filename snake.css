@@ -2,6 +2,16 @@ body {
     text-align: center;
 }
 
-game-box {
-    border:1px solid #c3c3c3;
+.game-box {
+    border: 1px solid #c3c3c3;
+}
+
+.navigation-controllers {
+    display: none;
+}
+
+@media screen and (max-width: 800px) {
+    .navigation-controllers {
+        display: block;
+    }
 }

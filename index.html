@@ -4,15 +4,35 @@
         <title>Just snake right now</title>
         <script src="game.js"></script>
         <link href="snake.css" rel="stylesheet" />
+        <meta
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+            name="viewport"
+        />
     </head>
     <body>
         <canvas id="gameBox" width="500" height="500" class="game-box">
             Your browser does not support the canvas element.
         </canvas>
+        <div class="navigation-controllers">
+            <div style="display: inline-block; vertical-align: middle;">
+                <button onclick="goLeft()">LEFT</button>
+            </div>
+            <div style="display: inline-block; vertical-align: middle;">
+                <div>
+                    <button onclick="goUp()">UP</button>
+                </div>
+                <div>
+                    <button onclick="goDown()">DOWN</button>
+                </div>
+            </div>
+            <div style="display: inline-block; vertical-align: middle;">
+                <button onclick="goRight()">RIGHT</button>
+            </div>
+        </div>
         <div>
             <div>
                 Page is using cookies only for saving games highscore.
-                <br> 
+                <br />
                 If you not accept this state please leave this page ;)
             </div>
         </div>

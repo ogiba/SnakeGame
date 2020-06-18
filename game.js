@@ -6,13 +6,21 @@ const MoveDirection = {
 };
 
 let snakeSize = 10;
+let direction = MoveDirection.RIGHT;
 
 window.addEventListener("DOMContentLoaded", () => {
-    let direction = MoveDirection.RIGHT;
     let canvas = document.getElementById("gameBox");
+    let ctx = canvas.getContext("2d");
+    ctx.canvas.width =
+        canvas.width > window.innerWidth
+            ? window.innerWidth - 20
+            : canvas.width;
+    ctx.canvas.height =
+        canvas.width > window.innerWidth
+            ? window.innerWidth - 20
+            : canvas.width;
     let canvasWidth = canvas.width;
     let canvasHeight = canvas.height;
-    let ctx = canvas.getContext("2d");
     let score = 0;
     let snake = new Snake(ctx, 4);
     let food = new Food(ctx);
@@ -116,6 +124,34 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+function goDown() {
+    if (direction !== MoveDirection.UP) {
+        direction = MoveDirection.DOWN;
+        console.log(direction);
+    }
+}
+
+function goUp() {
+    if (direction !== MoveDirection.DOWN) {
+        direction = MoveDirection.UP;
+        console.log(direction);
+    }
+}
+
+function goLeft() {
+    if (direction !== MoveDirection.RIGHT) {
+        direction = MoveDirection.LEFT;
+    }
+    console.log(direction);
+}
+
+function goRight() {
+    if (direction !== MoveDirection.LEFT) {
+        direction = MoveDirection.RIGHT;
+        console.log(direction);
+    }
+}
+
 function checkCollision(snake, point) {
     let collisionDetected = false;
 
@@ -142,7 +178,11 @@ function drawScore(ctx, score) {
 function drawGameOver(ctx, highscore, xPos, yPos) {
     let gameOverMessage = "Refresh page to play again";
     let savedHighscore = getCoookie("highscore");
-    let highscoreMessage = `You highscore is ${savedHighscore != null && savedHighscore > highscore ? savedHighscore : highscore}`;
+    let highscoreMessage = `You highscore is ${
+        savedHighscore != null && savedHighscore > highscore
+            ? savedHighscore
+            : highscore
+    }`;
     let gameOverMessageSize = {
         width: ctx.measureText(gameOverMessage).width,
         height: ctx.measureText(gameOverMessage).height
@@ -150,13 +190,18 @@ function drawGameOver(ctx, highscore, xPos, yPos) {
 
     drawText(ctx, gameOverMessage, xPos - gameOverMessageSize.width / 2, yPos);
 
-    let highscoreMessageSize = ctx.measureText(highscoreMessage).width
+    let highscoreMessageSize = ctx.measureText(highscoreMessage).width;
     let highscoreMessagePos = {
         xPos: xPos - highscoreMessageSize / 2,
         yPos: yPos + 50
-    }
+    };
 
-    drawText(ctx, highscoreMessage, highscoreMessagePos.xPos, highscoreMessagePos.yPos)
+    drawText(
+        ctx,
+        highscoreMessage,
+        highscoreMessagePos.xPos,
+        highscoreMessagePos.yPos
+    );
 }
 
 function setCookie(key, value) {
@@ -167,10 +212,10 @@ function getCoookie(key) {
     let cookies = document.cookie.split(";");
     for (const cookie in cookies) {
         if (cookie.includes(key)) {
-            return cookie.split("=")[1]
+            return cookie.split("=")[1];
         }
     }
-    return null
+    return null;
 }
 
 class Point {
