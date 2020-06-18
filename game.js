@@ -23,9 +23,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function gameThread(speed) {
         let gameLoop = setInterval(() => {
-            ctx.fillStyle = 'lightgrey';
+            ctx.fillStyle = "lightgrey";
             ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-            ctx.strokeStyle = 'black';
+            ctx.strokeStyle = "black";
             ctx.strokeRect(0, 0, canvasWidth, canvasHeight);
 
             let tailX = snake.tail[0].x;
@@ -46,16 +46,23 @@ window.addEventListener("DOMContentLoaded", () => {
                     break;
             }
 
-            if (tailX === -1
-                || tailX === canvasWidth / snakeSize
-                || tailY === -1
-                || tailY === canvasHeight / snakeSize
-                || checkCollision(snake, new Point(tailX, tailY))) {
+            if (
+                tailX === -1 ||
+                tailX === canvasWidth / snakeSize ||
+                tailY === -1 ||
+                tailY === canvasHeight / snakeSize ||
+                checkCollision(snake, new Point(tailX, tailY))
+            ) {
                 clearInterval(gameLoop);
+                drawGameOver(ctx, canvasWidth / 2, canvasHeight / 2);
                 return;
             }
 
-            if (food.position !== undefined && food.position.x === tailX && food.position.y === tailY) {
+            if (
+                food.position !== undefined &&
+                food.position.x === tailX &&
+                food.position.y === tailY
+            ) {
                 snake.grow(tailX, tailY);
                 food.relocate();
                 score++;
@@ -64,7 +71,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 food.locate();
             }
 
-            drawText(ctx, score);
+            drawScore(ctx, score);
 
             if (score === 10 && gameSpeed > 50) {
                 clearInterval(gameLoop);
@@ -74,9 +81,8 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     function handleKeyEvents() {
-        document.onkeydown = (event) => {
+        document.onkeydown = event => {
             switch (event.keyCode) {
-
                 case 37:
                     if (direction !== MoveDirection.RIGHT) {
                         direction = MoveDirection.LEFT;
@@ -121,10 +127,21 @@ function checkCollision(snake, point) {
     return collisionDetected;
 }
 
-function drawText(ctx, value) {
+function drawText(ctx, text, xPos, yPos) {
     ctx.font = "16px Arial";
     ctx.fillStyle = "black";
-    ctx.fillText(`Your score is ${value}`, 10, 20);
+    let a = ctx.measureText(text);
+    ctx.fillText(text, xPos, yPos);
+}
+
+function drawScore(ctx, score) {
+    drawText(ctx, `Your score is ${score}`, 10, 20);
+}
+
+function drawGameOver(ctx, xPos, yPos) {
+    let gameOverMessage = "Refresh page to play again";
+    let messageSize = ctx.measureText(gameOverMessage).width;
+    drawText(ctx, gameOverMessage, xPos - messageSize / 2, yPos);
 }
 
 class Point {
@@ -146,10 +163,10 @@ class Food {
         let ctx = this.ctx;
         let size = this.size;
 
-        ctx.fillStyle = 'orange';
+        ctx.fillStyle = "orange";
         ctx.fillRect(position.x * size, position.y * size, size, size);
         // This is the border of the square
-        ctx.strokeStyle = 'darkgreen';
+        ctx.strokeStyle = "darkgreen";
         ctx.strokeRect(position.x * size, position.y * size, size, size);
     }
 
@@ -226,10 +243,10 @@ class Snake {
     draw(x, y) {
         let ctx = this.ctx;
 
-        ctx.fillStyle = 'green';
+        ctx.fillStyle = "green";
         ctx.fillRect(x * snakeSize, y * snakeSize, snakeSize, snakeSize);
         // This is the border of the square
-        ctx.strokeStyle = 'darkgreen';
+        ctx.strokeStyle = "darkgreen";
         ctx.strokeRect(x * snakeSize, y * snakeSize, snakeSize, snakeSize);
     }
 
@@ -249,4 +266,3 @@ class Snake {
         }
     }
 }
-
