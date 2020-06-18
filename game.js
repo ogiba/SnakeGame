@@ -9,7 +9,7 @@ let snakeSize = 10;
 
 window.addEventListener("DOMContentLoaded", () => {
     let direction = MoveDirection.RIGHT;
-    let canvas = document.getElementById("myCanvas");
+    let canvas = document.getElementById("gameBox");
     let canvasWidth = canvas.width;
     let canvasHeight = canvas.height;
     let ctx = canvas.getContext("2d");
