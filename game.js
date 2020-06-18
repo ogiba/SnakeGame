@@ -54,6 +54,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 checkCollision(snake, new Point(tailX, tailY))
             ) {
                 clearInterval(gameLoop);
+                setCookie("highscore", score);
                 drawGameOver(ctx, score, canvasWidth / 2, canvasHeight / 2);
                 return;
             }
@@ -140,7 +141,8 @@ function drawScore(ctx, score) {
 
 function drawGameOver(ctx, highscore, xPos, yPos) {
     let gameOverMessage = "Refresh page to play again";
-    let highscoreMessage = `You highscore is ${highscore}`;
+    let savedHighscore = getCoookie("highscore");
+    let highscoreMessage = `You highscore is ${savedHighscore != null && savedHighscore > highscore ? savedHighscore : highscore}`;
     let gameOverMessageSize = {
         width: ctx.measureText(gameOverMessage).width,
         height: ctx.measureText(gameOverMessage).height
@@ -155,6 +157,20 @@ function drawGameOver(ctx, highscore, xPos, yPos) {
     }
 
     drawText(ctx, highscoreMessage, highscoreMessagePos.xPos, highscoreMessagePos.yPos)
+}
+
+function setCookie(key, value) {
+    document.cookie = `${key}=${value}`;
+}
+
+function getCoookie(key) {
+    let cookies = document.cookie.split(";");
+    for (const cookie in cookies) {
+        if (cookie.includes(key)) {
+            return cookie.split("=")[1]
+        }
+    }
+    return null
 }
 
 class Point {
