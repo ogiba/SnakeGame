@@ -54,7 +54,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 checkCollision(snake, new Point(tailX, tailY))
             ) {
                 clearInterval(gameLoop);
-                drawGameOver(ctx, canvasWidth / 2, canvasHeight / 2);
+                drawGameOver(ctx, score, canvasWidth / 2, canvasHeight / 2);
                 return;
             }
 
@@ -138,10 +138,23 @@ function drawScore(ctx, score) {
     drawText(ctx, `Your score is ${score}`, 10, 20);
 }
 
-function drawGameOver(ctx, xPos, yPos) {
+function drawGameOver(ctx, highscore, xPos, yPos) {
     let gameOverMessage = "Refresh page to play again";
-    let messageSize = ctx.measureText(gameOverMessage).width;
-    drawText(ctx, gameOverMessage, xPos - messageSize / 2, yPos);
+    let highscoreMessage = `You highscore is ${highscore}`;
+    let gameOverMessageSize = {
+        width: ctx.measureText(gameOverMessage).width,
+        height: ctx.measureText(gameOverMessage).height
+    };
+
+    drawText(ctx, gameOverMessage, xPos - gameOverMessageSize.width / 2, yPos);
+
+    let highscoreMessageSize = ctx.measureText(highscoreMessage).width
+    let highscoreMessagePos = {
+        xPos: xPos - highscoreMessageSize / 2,
+        yPos: yPos + 50
+    }
+
+    drawText(ctx, highscoreMessage, highscoreMessagePos.xPos, highscoreMessagePos.yPos)
 }
 
 class Point {
