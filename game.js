@@ -56,9 +56,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
             if (
                 tailX === -1 ||
-                tailX === canvasWidth / snakeSize ||
+                tailX >= canvasWidth / snakeSize ||
                 tailY === -1 ||
-                tailY === canvasHeight / snakeSize ||
+                tailY >= canvasHeight / snakeSize ||
                 checkCollision(snake, new Point(tailX, tailY))
             ) {
                 clearInterval(gameLoop);
