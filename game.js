@@ -5,8 +5,17 @@ const MoveDirection = {
     RIGHT: "right"
 };
 
+
+class Size {
+    constructor(width, height) {
+        this.width = width
+        this.height = height
+    }
+}
+
 let snakeSize = 10;
 let direction = MoveDirection.RIGHT;
+let gameViewSize = new Size(0,0)
 
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
@@ -19,8 +28,7 @@ window.addEventListener("DOMContentLoaded", () => {
         canvas.width > window.innerWidth
             ? window.innerWidth - 20
             : canvas.width;
-    let canvasWidth = canvas.width;
-    let canvasHeight = canvas.height;
+    gameViewSize = new Size(canvas.width, canvas.height);
     let score = 0;
     let snake = new Snake(ctx, 4);
     let food = new Food(ctx);
@@ -32,9 +40,9 @@ window.addEventListener("DOMContentLoaded", () => {
     function gameThread(speed) {
         let gameLoop = setInterval(() => {
             ctx.fillStyle = "lightgrey";
-            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+            ctx.fillRect(0, 0, gameViewSize.width, gameViewSize.height);
             ctx.strokeStyle = "black";
-            ctx.strokeRect(0, 0, canvasWidth, canvasHeight);
+            ctx.strokeRect(0, 0, gameViewSize.width, gameViewSize.height);
 
             let tailX = snake.tail[0].x;
             let tailY = snake.tail[0].y;
@@ -56,14 +64,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
             if (
                 tailX === -1 ||
-                tailX >= canvasWidth / snakeSize ||
+                tailX >= gameViewSize.width / snakeSize ||
                 tailY === -1 ||
-                tailY >= canvasHeight / snakeSize ||
+                tailY >= gameViewSize.height / snakeSize ||
                 checkCollision(snake, new Point(tailX, tailY))
             ) {
                 clearInterval(gameLoop);
                 setCookie("highscore", score);
-                drawGameOver(ctx, score, canvasWidth / 2, canvasHeight / 2);
+                drawGameOver(ctx, score, gameViewSize.width / 2, gameViewSize.height / 2);
                 return;
             }
 
@@ -245,7 +253,7 @@ class Food {
     }
 
     relocate() {
-        let availableSpace = (500 - this.size) / this.size;
+        let availableSpace = (gameViewSize.height - this.size) / this.size;
 
         let x = Math.round(Math.random() * availableSpace);
         let y = Math.round(Math.random() * availableSpace);
