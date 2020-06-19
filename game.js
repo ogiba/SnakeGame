@@ -68,14 +68,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 tailY >= gameViewSize.height / snakeSize ||
                 checkCollision(snake, new Point(tailX, tailY))
             ) {
-                clearInterval(gameLoop);
-                setCookie("highscore", score);
-                drawGameOver(
-                    ctx,
-                    score,
-                    gameViewSize.width / 2,
-                    gameViewSize.height / 2
-                );
+                setGameOverState(gameLoop, ctx, score);
                 return;
             }
 
@@ -94,7 +87,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
             drawScore(ctx, score);
 
-            increaseGameDifficultyLevel(gameLoop, score, gameSpeed)
+            increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
         }, speed);
     }
 
@@ -117,10 +110,21 @@ window.addEventListener("DOMContentLoaded", () => {
         } else if (score == 150 && gameSpeed > 10) {
             clearInterval(gameLoop);
             gameThread(30);
-        } else if( score == 300 && gameSpeed > 10) {
+        } else if (score == 300 && gameSpeed > 10) {
             clearInterval(gameLoop);
             gameThread(20);
         }
+    }
+
+    function setGameOverState(gameLoop, ctx, score) {
+        clearInterval(gameLoop);
+        setCookie("highscore", score);
+        drawGameOver(
+            ctx,
+            score,
+            gameViewSize.width / 2,
+            gameViewSize.height / 2
+        );
     }
 
     function handleKeyEvents() {
