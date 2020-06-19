@@ -5,17 +5,16 @@ const MoveDirection = {
     RIGHT: "right"
 };
 
-
 class Size {
     constructor(width, height) {
-        this.width = width
-        this.height = height
+        this.width = width;
+        this.height = height;
     }
 }
 
 let snakeSize = 10;
 let direction = MoveDirection.RIGHT;
-let gameViewSize = new Size(0,0)
+let gameViewSize = new Size(0, 0);
 
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
@@ -71,7 +70,12 @@ window.addEventListener("DOMContentLoaded", () => {
             ) {
                 clearInterval(gameLoop);
                 setCookie("highscore", score);
-                drawGameOver(ctx, score, gameViewSize.width / 2, gameViewSize.height / 2);
+                drawGameOver(
+                    ctx,
+                    score,
+                    gameViewSize.width / 2,
+                    gameViewSize.height / 2
+                );
                 return;
             }
 
@@ -92,7 +96,25 @@ window.addEventListener("DOMContentLoaded", () => {
 
             if (score === 10 && gameSpeed > 50) {
                 clearInterval(gameLoop);
+                gameThread(90);
+            } else if (score == 20 && gameSpeed > 50) {
+                clearInterval(gameLoop);
+                gameThread(80);
+            } else if (score == 30 && gameSpeed > 50) {
+                clearInterval(gameLoop);
+                gameThread(60);
+            } else if (score == 50 && gameSpeed > 10) {
+                clearInterval(gameLoop);
                 gameThread(50);
+            } else if (score == 100 && gameSpeed > 10) {
+                clearInterval(gameLoop);
+                gameThread(40);
+            } else if (score == 150 && gameSpeed > 10) {
+                clearInterval(gameLoop);
+                gameThread(30);
+            } else if( score == 300 && gameSpeed > 10) {
+                clearInterval(gameLoop);
+                gameThread(20);
             }
         }, speed);
     }
