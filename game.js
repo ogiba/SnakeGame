@@ -94,29 +94,33 @@ window.addEventListener("DOMContentLoaded", () => {
 
             drawScore(ctx, score);
 
-            if (score === 10 && gameSpeed > 50) {
-                clearInterval(gameLoop);
-                gameThread(90);
-            } else if (score == 20 && gameSpeed > 50) {
-                clearInterval(gameLoop);
-                gameThread(80);
-            } else if (score == 30 && gameSpeed > 50) {
-                clearInterval(gameLoop);
-                gameThread(60);
-            } else if (score == 50 && gameSpeed > 10) {
-                clearInterval(gameLoop);
-                gameThread(50);
-            } else if (score == 100 && gameSpeed > 10) {
-                clearInterval(gameLoop);
-                gameThread(40);
-            } else if (score == 150 && gameSpeed > 10) {
-                clearInterval(gameLoop);
-                gameThread(30);
-            } else if( score == 300 && gameSpeed > 10) {
-                clearInterval(gameLoop);
-                gameThread(20);
-            }
+            increaseGameDifficultyLevel(gameLoop, score, gameSpeed)
         }, speed);
+    }
+
+    function increaseGameDifficultyLevel(gameLoop, score, gameSpeed) {
+        if (score === 10 && gameSpeed > 50) {
+            clearInterval(gameLoop);
+            gameThread(90);
+        } else if (score == 20 && gameSpeed > 50) {
+            clearInterval(gameLoop);
+            gameThread(80);
+        } else if (score == 30 && gameSpeed > 50) {
+            clearInterval(gameLoop);
+            gameThread(60);
+        } else if (score == 50 && gameSpeed > 10) {
+            clearInterval(gameLoop);
+            gameThread(50);
+        } else if (score == 100 && gameSpeed > 10) {
+            clearInterval(gameLoop);
+            gameThread(40);
+        } else if (score == 150 && gameSpeed > 10) {
+            clearInterval(gameLoop);
+            gameThread(30);
+        } else if( score == 300 && gameSpeed > 10) {
+            clearInterval(gameLoop);
+            gameThread(20);
+        }
     }
 
     function handleKeyEvents() {
