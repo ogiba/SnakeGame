@@ -19,14 +19,16 @@ let gameViewSize = new Size(0, 0);
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
     let ctx = canvas.getContext("2d");
-    ctx.canvas.width =
-        canvas.width > window.innerWidth
-            ? window.innerWidth - 20
-            : canvas.width;
-    ctx.canvas.height =
-        canvas.width > window.innerWidth
-            ? window.innerWidth - 20
-            : canvas.width;
+    let calculatedSize =
+        2 *
+        Math.round(
+            (canvas.width > window.innerWidth
+                ? window.innerWidth - 20
+                : canvas.width) / 2
+        );
+    ctx.canvas.width = calculatedSize;
+    ctx.canvas.height = calculatedSize;
+
     gameViewSize = new Size(canvas.width, canvas.height);
     let score = 0;
     let snake = new Snake(ctx, 4);
