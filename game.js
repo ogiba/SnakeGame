@@ -30,6 +30,7 @@ let snakeSize = 10;
 let direction = MoveDirection.RIGHT;
 let gameViewSize = new Size(0, 0);
 let gameState = GameState.NEW_GAME;
+let isMobile = false;
 
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
@@ -50,6 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let snake = new Snake(ctx, 4);
     let food = new Food(ctx);
     let gameSpeed = 100;
+    isMobile = window.innerWidth <= 800
 
     handleKeyEvents();
     handleTapEvents();
@@ -191,6 +193,9 @@ window.addEventListener("DOMContentLoaded", () => {
                         console.log(direction);
                     }
                     break;
+                case KeyCode.SPACEBAR:
+                    startGame();
+                    break;
             }
         };
     }
@@ -199,16 +204,18 @@ window.addEventListener("DOMContentLoaded", () => {
 function handleTapEvents() {
     document.addEventListener(
         "touchend",
-        () => {
-            if (
-                gameState == GameState.NEW_GAME ||
-                gameState == GameState.GAME_OVER
-            ) {
-                gameState = GameState.RUNNING;
-            }
-        },
+        () => startGame(),
         false
     );
+}
+
+function startGame() {
+    if (
+        gameState == GameState.NEW_GAME ||
+        gameState == GameState.GAME_OVER
+    ) {
+        gameState = GameState.RUNNING;
+    }
 }
 
 function goDown() {
@@ -263,14 +270,14 @@ function drawScore(ctx, score) {
 }
 
 function drawNewGame(ctx, xPos, yPos) {
-    let newGameMessage = "Tap to play";
+    let newGameMessage = isMobile ? "Tap to play" : "Press spacebar to play";
     let newGameMessageSize = ctx.measureText(newGameMessage);
 
     drawText(ctx, newGameMessage, xPos - newGameMessageSize.width / 2, yPos);
 }
 
 function drawGameOver(ctx, highscore, xPos, yPos) {
-    let gameOverMessage = "Tap to play again";
+    let gameOverMessage = isMobile ? "Tap to play again" : "Press spacebar to play";
     let savedHighscore = getHighscore();
     let highscoreMessage = `You highscore is ${savedHighscore}`;
     let gameOverMessageSize = {
