@@ -54,9 +54,8 @@ window.addEventListener("DOMContentLoaded", () => {
             ctx.strokeRect(0, 0, gameViewSize.width, gameViewSize.height);
 
             if (gameState == GameState.NEW_GAME) {
-                drawText(
+                drawNewGame(
                     ctx,
-                    "Tap to play",
                     gameViewSize.width / 2,
                     gameViewSize.height / 2
                 );
@@ -185,11 +184,18 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function handleTapEvents() {
-    document.addEventListener("touchend", () => {
-        if( gameState == GameState.NEW_GAME || gameState == GameState.GAME_OVER) {
-            gameState = GameState.RUNNING;
-        }
-    }, false)
+    document.addEventListener(
+        "touchend",
+        () => {
+            if (
+                gameState == GameState.NEW_GAME ||
+                gameState == GameState.GAME_OVER
+            ) {
+                gameState = GameState.RUNNING;
+            }
+        },
+        false
+    );
 }
 
 function goDown() {
@@ -241,6 +247,13 @@ function drawText(ctx, text, xPos, yPos) {
 
 function drawScore(ctx, score) {
     drawText(ctx, `Your score is ${score}`, 10, 20);
+}
+
+function drawNewGame(ctx, xPos, yPos) {
+    let newGameMessage = "Tap to play";
+    let newGameMessageSize = ctx.measureText(newGameMessage);
+
+    drawText(ctx, newGameMessage, xPos - newGameMessageSize.width / 2, yPos);
 }
 
 function drawGameOver(ctx, highscore, xPos, yPos) {
