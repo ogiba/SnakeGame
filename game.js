@@ -5,6 +5,12 @@ const MoveDirection = {
     RIGHT: "right"
 };
 
+const GameState = {
+    NEW_GAME: "newGame",
+    RUNNING: "running",
+    GAME_OVER: "gameOver"
+};
+
 class Size {
     constructor(width, height) {
         this.width = width;
@@ -15,6 +21,7 @@ class Size {
 let snakeSize = 10;
 let direction = MoveDirection.RIGHT;
 let gameViewSize = new Size(0, 0);
+let gameState = GameState.NEW_GAME;
 
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
@@ -37,6 +44,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     gameThread(gameSpeed);
     handleKeyEvents();
+    handleTapEvents();
 
     function gameThread(speed) {
         let gameLoop = setInterval(() => {
@@ -45,51 +53,60 @@ window.addEventListener("DOMContentLoaded", () => {
             ctx.strokeStyle = "black";
             ctx.strokeRect(0, 0, gameViewSize.width, gameViewSize.height);
 
-            let tailX = snake.tail[0].x;
-            let tailY = snake.tail[0].y;
+            if (gameState == GameState.NEW_GAME) {
+                drawText(
+                    ctx,
+                    "Tap to play",
+                    gameViewSize.width / 2,
+                    gameViewSize.height / 2
+                );
+            } else if (gameState == GameState.RUNNING) {
+                let tailX = snake.tail[0].x;
+                let tailY = snake.tail[0].y;
 
-            switch (direction) {
-                case MoveDirection.RIGHT:
-                    tailX++;
-                    break;
-                case MoveDirection.DOWN:
-                    tailY++;
-                    break;
-                case MoveDirection.UP:
-                    tailY--;
-                    break;
-                case MoveDirection.LEFT:
-                    tailX--;
-                    break;
+                switch (direction) {
+                    case MoveDirection.RIGHT:
+                        tailX++;
+                        break;
+                    case MoveDirection.DOWN:
+                        tailY++;
+                        break;
+                    case MoveDirection.UP:
+                        tailY--;
+                        break;
+                    case MoveDirection.LEFT:
+                        tailX--;
+                        break;
+                }
+
+                if (
+                    tailX === -1 ||
+                    tailX >= gameViewSize.width / snakeSize ||
+                    tailY === -1 ||
+                    tailY >= gameViewSize.height / snakeSize ||
+                    checkCollision(snake, new Point(tailX, tailY))
+                ) {
+                    setGameOverState(gameLoop, ctx, score);
+                    return;
+                }
+
+                if (
+                    food.position !== undefined &&
+                    food.position.x === tailX &&
+                    food.position.y === tailY
+                ) {
+                    snake.grow(tailX, tailY);
+                    food.relocate();
+                    score++;
+                } else {
+                    snake.move(tailX, tailY);
+                    food.locate();
+                }
+
+                drawScore(ctx, score);
+
+                increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
             }
-
-            if (
-                tailX === -1 ||
-                tailX >= gameViewSize.width / snakeSize ||
-                tailY === -1 ||
-                tailY >= gameViewSize.height / snakeSize ||
-                checkCollision(snake, new Point(tailX, tailY))
-            ) {
-                setGameOverState(gameLoop, ctx, score);
-                return;
-            }
-
-            if (
-                food.position !== undefined &&
-                food.position.x === tailX &&
-                food.position.y === tailY
-            ) {
-                snake.grow(tailX, tailY);
-                food.relocate();
-                score++;
-            } else {
-                snake.move(tailX, tailY);
-                food.locate();
-            }
-
-            drawScore(ctx, score);
-
-            increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
         }, speed);
     }
 
@@ -163,6 +180,14 @@ window.addEventListener("DOMContentLoaded", () => {
         };
     }
 });
+
+function handleTapEvents() {
+    document.addEventListener("touchend", () => {
+        if( gameState == GameState.NEW_GAME) {
+            gameState = GameState.RUNNING;
+        }
+    }, false)
+}
 
 function goDown() {
     if (direction !== MoveDirection.UP) {
