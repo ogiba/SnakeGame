@@ -11,6 +11,13 @@ const GameState = {
     GAME_OVER: "gameOver"
 };
 
+const KeyEvent = {
+    LEFT_ARROW: 37,
+    RIGHT_ARROW: 39,
+    UP_ARROW: 38,
+    DOWN_ARROW: 40
+};
+
 class Size {
     constructor(width, height) {
         this.width = width;
@@ -159,28 +166,28 @@ window.addEventListener("DOMContentLoaded", () => {
     function handleKeyEvents() {
         document.onkeydown = event => {
             switch (event.keyCode) {
-                case 37:
+                case KeyEvent.LEFT_ARROW:
                     if (direction !== MoveDirection.RIGHT) {
                         direction = MoveDirection.LEFT;
                     }
                     console.log(direction);
                     break;
 
-                case 39:
+                case KeyEvent.RIGHT_ARROW:
                     if (direction !== MoveDirection.LEFT) {
                         direction = MoveDirection.RIGHT;
                         console.log(direction);
                     }
                     break;
 
-                case 38:
+                case KeyEvent.UP_ARROW:
                     if (direction !== MoveDirection.DOWN) {
                         direction = MoveDirection.UP;
                         console.log(direction);
                     }
                     break;
 
-                case 40:
+                case KeyEvent.DOWN_ARROW:
                     if (direction !== MoveDirection.UP) {
                         direction = MoveDirection.DOWN;
                         console.log(direction);
