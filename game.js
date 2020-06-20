@@ -38,6 +38,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     gameViewSize = new Size(canvas.width, canvas.height);
     let score = 0;
+    let highscore = 0;
     let snake = new Snake(ctx, 4);
     let food = new Food(ctx);
     let gameSpeed = 100;
@@ -85,9 +86,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     tailY >= gameViewSize.height / snakeSize ||
                     checkCollision(snake, new Point(tailX, tailY))
                 ) {
-                    snake = new Snake(ctx, 4);
-                    direction = MoveDirection.RIGHT;
-                    gameState = GameState.GAME_OVER;
+                    resetGameState();
                     return;
                 }
 
@@ -108,7 +107,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
             } else if (gameState == GameState.GAME_OVER) {
-                setGameOverState(gameLoop, ctx, score);
+                drawGameOverState(ctx, highscore);
             }
         }, speed);
     }
@@ -138,14 +137,23 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function setGameOverState(gameLoop, ctx, score) {
-        setCookie("highscore", score);
+    function drawGameOverState(ctx, score) {
         drawGameOver(
             ctx,
             score,
             gameViewSize.width / 2,
             gameViewSize.height / 2
         );
+    }
+
+    function resetGameState() {
+        setHighscore(score);
+        snake = new Snake(ctx, 4);
+        highscore = score;
+        score = 0;
+        food.relocate();
+        direction = MoveDirection.RIGHT;
+        gameState = GameState.GAME_OVER;
     }
 
     function handleKeyEvents() {
@@ -257,13 +265,9 @@ function drawNewGame(ctx, xPos, yPos) {
 }
 
 function drawGameOver(ctx, highscore, xPos, yPos) {
-    let gameOverMessage = "Refresh page to play again";
-    let savedHighscore = getCoookie("highscore");
-    let highscoreMessage = `You highscore is ${
-        savedHighscore != null && savedHighscore > highscore
-            ? savedHighscore
-            : highscore
-    }`;
+    let gameOverMessage = "Tap to play again";
+    let savedHighscore = getHighscore();
+    let highscoreMessage = `You highscore is ${savedHighscore}`;
     let gameOverMessageSize = {
         width: ctx.measureText(gameOverMessage).width,
         height: ctx.measureText(gameOverMessage).height
@@ -285,13 +289,31 @@ function drawGameOver(ctx, highscore, xPos, yPos) {
     );
 }
 
-function setCookie(key, value) {
-    document.cookie = `${key}=${value}`;
+function setHighscore(score) {
+    let savedHighscore = getHighscore();
+    if (
+        savedHighscore == null ||
+        savedHighscore == "" ||
+        savedHighscore < score
+    ) {
+        setCookie("highscore", score);
+    }
 }
 
-function getCoookie(key) {
+function getHighscore() {
+    return getCookie("highscore");
+}
+
+function setCookie(key, value) {
+    let expires = new Date();
+    expires.setDate(expires.getTime() + 100 * 60 * 60 * 24 * 100);
+    document.cookie = `${key}=${value};expires=${expires.toGMTString()}`;
+}
+
+function getCookie(key) {
     let cookies = document.cookie.split(";");
-    for (const cookie in cookies) {
+    for (const index in cookies) {
+        let cookie = cookies[index];
         if (cookie.includes(key)) {
             return cookie.split("=")[1];
         }
