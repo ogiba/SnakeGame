@@ -42,9 +42,9 @@ window.addEventListener("DOMContentLoaded", () => {
     let food = new Food(ctx);
     let gameSpeed = 100;
 
-    gameThread(gameSpeed);
     handleKeyEvents();
     handleTapEvents();
+    gameThread(gameSpeed);
 
     function gameThread(speed) {
         let gameLoop = setInterval(() => {
@@ -86,7 +86,9 @@ window.addEventListener("DOMContentLoaded", () => {
                     tailY >= gameViewSize.height / snakeSize ||
                     checkCollision(snake, new Point(tailX, tailY))
                 ) {
-                    setGameOverState(gameLoop, ctx, score);
+                    snake = new Snake(ctx, 4);
+                    direction = MoveDirection.RIGHT;
+                    gameState = GameState.GAME_OVER;
                     return;
                 }
 
@@ -106,6 +108,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 drawScore(ctx, score);
 
                 increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
+            } else if (gameState == GameState.GAME_OVER) {
+                setGameOverState(gameLoop, ctx, score);
             }
         }, speed);
     }
@@ -136,7 +140,6 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     function setGameOverState(gameLoop, ctx, score) {
-        clearInterval(gameLoop);
         setCookie("highscore", score);
         drawGameOver(
             ctx,
@@ -183,7 +186,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 function handleTapEvents() {
     document.addEventListener("touchend", () => {
-        if( gameState == GameState.NEW_GAME) {
+        if( gameState == GameState.NEW_GAME || gameState == GameState.GAME_OVER) {
             gameState = GameState.RUNNING;
         }
     }, false)
