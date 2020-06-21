@@ -2,13 +2,13 @@ const MoveDirection = {
     UP: "up",
     DOWN: "down",
     LEFT: "left",
-    RIGHT: "right"
+    RIGHT: "right",
 };
 
 const GameState = {
     NEW_GAME: "newGame",
     RUNNING: "running",
-    GAME_OVER: "gameOver"
+    GAME_OVER: "gameOver",
 };
 
 const KeyCode = {
@@ -16,7 +16,7 @@ const KeyCode = {
     RIGHT_ARROW: 39,
     UP_ARROW: 38,
     DOWN_ARROW: 40,
-    SPACEBAR: 32
+    SPACEBAR: 32,
 };
 
 class Size {
@@ -51,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let snake = new Snake(ctx, 4);
     let food = new Food(ctx);
     let gameSpeed = 100;
-    isMobile = window.innerWidth <= 800
+    isMobile = window.innerWidth <= 800;
 
     handleKeyEvents();
     handleTapEvents();
@@ -147,10 +147,10 @@ window.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function drawGameOverState(ctx, score) {
+    function drawGameOverState(ctx, reachedScore) {
         drawGameOver(
             ctx,
-            score,
+            reachedScore,
             gameViewSize.width / 2,
             gameViewSize.height / 2
         );
@@ -167,7 +167,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     function handleKeyEvents() {
-        document.onkeydown = event => {
+        document.onkeydown = (event) => {
             switch (event.keyCode) {
                 case KeyCode.LEFT_ARROW:
                     if (direction !== MoveDirection.RIGHT) {
@@ -202,18 +202,11 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 function handleTapEvents() {
-    document.addEventListener(
-        "touchend",
-        () => startGame(),
-        false
-    );
+    document.addEventListener("touchend", () => startGame(), false);
 }
 
 function startGame() {
-    if (
-        gameState == GameState.NEW_GAME ||
-        gameState == GameState.GAME_OVER
-    ) {
+    if (gameState == GameState.NEW_GAME || gameState == GameState.GAME_OVER) {
         gameState = GameState.RUNNING;
     }
 }
@@ -249,7 +242,7 @@ function goRight() {
 function checkCollision(snake, point) {
     let collisionDetected = false;
 
-    snake.tail.forEach(itemPoint => {
+    snake.tail.forEach((itemPoint) => {
         if (itemPoint.x === point.x && itemPoint.y === point.y) {
             collisionDetected = true;
         }
@@ -258,8 +251,8 @@ function checkCollision(snake, point) {
     return collisionDetected;
 }
 
-function drawText(ctx, text, xPos, yPos) {
-    ctx.font = "16px Arial";
+function drawText(ctx, text, xPos, yPos, fontSize = 16) {
+    ctx.font = `${fontSize}px Arial`;
     ctx.fillStyle = "black";
     let a = ctx.measureText(text);
     ctx.fillText(text, xPos, yPos);
@@ -276,21 +269,30 @@ function drawNewGame(ctx, xPos, yPos) {
     drawText(ctx, newGameMessage, xPos - newGameMessageSize.width / 2, yPos);
 }
 
-function drawGameOver(ctx, highscore, xPos, yPos) {
-    let gameOverMessage = isMobile ? "Tap to play again" : "Press spacebar to play";
+function drawGameOver(ctx, reachedScore, xPos, yPos) {
+    let gameOverMessage = isMobile
+        ? "Tap to play again"
+        : "Press spacebar to play";
     let savedHighscore = getHighscore();
-    let highscoreMessage = `You highscore is ${savedHighscore}`;
+    let isHighscoreBeaten = reachedScore > savedHighscore;
+    let highscoreMessage = isHighscoreBeaten
+        ? `Reached new highscore: ${reachedScore}!!`
+        : `Your highscore is ${savedHighscore != null ? savedHighscore : 0}`;
+    let scoreMessage = isHighscoreBeaten
+        ? null
+        : `Reached score: ${reachedScore}`;
+
     let gameOverMessageSize = {
         width: ctx.measureText(gameOverMessage).width,
-        height: ctx.measureText(gameOverMessage).height
+        height: ctx.measureText(gameOverMessage).height,
     };
 
     drawText(ctx, gameOverMessage, xPos - gameOverMessageSize.width / 2, yPos);
 
     let highscoreMessageSize = ctx.measureText(highscoreMessage).width;
     let highscoreMessagePos = {
-        xPos: xPos - highscoreMessageSize / 2,
-        yPos: yPos + 50
+        xPos: xPos - Math.round(highscoreMessageSize / 2),
+        yPos: yPos + 50,
     };
 
     drawText(
@@ -299,6 +301,22 @@ function drawGameOver(ctx, highscore, xPos, yPos) {
         highscoreMessagePos.xPos,
         highscoreMessagePos.yPos
     );
+
+    if (scoreMessage != null) {
+        let scoreMessageSize = ctx.measureText(scoreMessage).width;
+        let scoreMessagePos = {
+            xPos: xPos - Math.round(scoreMessageSize / 2),
+            yPos: yPos + 75,
+        };
+
+        drawText(
+            ctx,
+            scoreMessage,
+            scoreMessagePos.xPos,
+            scoreMessagePos.yPos,
+            12
+        );
+    }
 }
 
 function setHighscore(score) {
