@@ -251,22 +251,42 @@ function checkCollision(snake, point) {
     return collisionDetected;
 }
 
-function drawText(ctx, text, xPos, yPos, fontSize = 16) {
+function legacyDrawText(ctx, text, xPos, yPos, fontSize = 16) {
+    ctx.save();
     ctx.font = `${fontSize}px Arial`;
     ctx.fillStyle = "black";
     let a = ctx.measureText(text);
     ctx.fillText(text, xPos, yPos);
+    ctx.restore();
+}
+
+function drawText(
+    ctx,
+    text,
+    positionProvider = (textSize = 0) => new Point(0, 0),
+    fontSize = 16
+) {
+    ctx.save();
+    ctx.font = `${fontSize}px Arial`;
+    ctx.fillStyle = "black";
+    let a = ctx.measureText(text);
+    let position = positionProvider(a.width);
+    ctx.fillText(text, position.x, position.y);
+    ctx.restore();
 }
 
 function drawScore(ctx, score) {
-    drawText(ctx, `Your score is ${score}`, 10, 20);
+    drawText(ctx, `Your score is ${score}`, () => new Point(10, 20));
 }
 
 function drawNewGame(ctx, xPos, yPos) {
     let newGameMessage = isMobile ? "Tap to play" : "Press spacebar to play";
-    let newGameMessageSize = ctx.measureText(newGameMessage);
 
-    drawText(ctx, newGameMessage, xPos - newGameMessageSize.width / 2, yPos);
+    drawText(
+        ctx,
+        newGameMessage,
+        (textSize) => new Point(xPos - Math.round(textSize / 2), yPos)
+    );
 }
 
 function drawGameOver(ctx, reachedScore, xPos, yPos) {
@@ -279,43 +299,33 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
         ? null
         : `Reached score: ${reachedScore}`;
 
-    let highscoreMessageSize = ctx.measureText(highscoreMessage).width;
-    let highscoreMessagePos = {
-        xPos: xPos - Math.round(highscoreMessageSize / 2),
-        yPos: yPos,
-    };
-
     drawText(
         ctx,
         highscoreMessage,
-        highscoreMessagePos.xPos,
-        highscoreMessagePos.yPos
+        (textSize) => new Point(xPos - Math.round(textSize / 2), yPos)
     );
 
     if (scoreMessage != null) {
         let scoreMessageSize = ctx.measureText(scoreMessage).width;
-        let scoreMessagePos = {
-            xPos: xPos - Math.round(scoreMessageSize / 2),
-            yPos: yPos + 25,
-        };
 
-        drawText(ctx, scoreMessage, scoreMessagePos.xPos, scoreMessagePos.yPos);
+        drawText(
+            ctx,
+            scoreMessage,
+            (textSize) => new Point(xPos - Math.round(textSize / 2), yPos + 25)
+        );
     }
 
     let gameOverMessage = isMobile
         ? "Tap to play again"
         : "Press spacebar to play again";
-    let gameOverMessageSize = ctx.measureText(gameOverMessage).width;
-    let gameOverMessagePos = {
-        xPos: xPos - Math.round(gameOverMessageSize / 2),
-        yPos: yPos + 75,
-    };
 
     drawText(
         ctx,
         gameOverMessage,
-        gameOverMessagePos.xPos,
-        gameOverMessagePos.yPos
+        (textSize) => new Point(
+            xPos - Math.round(textSize / 2),
+            yPos + 75
+        )
     );
 }
 
