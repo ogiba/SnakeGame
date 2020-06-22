@@ -270,9 +270,6 @@ function drawNewGame(ctx, xPos, yPos) {
 }
 
 function drawGameOver(ctx, reachedScore, xPos, yPos) {
-    let gameOverMessage = isMobile
-        ? "Tap to play again"
-        : "Press spacebar to play again";
     let savedHighscore = getHighscore();
     let isHighscoreBeaten = reachedScore > savedHighscore;
     let highscoreMessage = isHighscoreBeaten
@@ -282,24 +279,10 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
         ? null
         : `Reached score: ${reachedScore}`;
 
-    let gameOverMessageSize = ctx.measureText(gameOverMessage).width
-    let gameOverMessagePos = {
-        xPos: xPos - Math.round(gameOverMessageSize / 2),
-        yPos: yPos
-    }
-
-
-    drawText(
-        ctx,
-        gameOverMessage,
-        gameOverMessagePos.xPos,
-        gameOverMessagePos.yPos
-    );
-
     let highscoreMessageSize = ctx.measureText(highscoreMessage).width;
     let highscoreMessagePos = {
         xPos: xPos - Math.round(highscoreMessageSize / 2),
-        yPos: yPos + 50,
+        yPos: yPos,
     };
 
     drawText(
@@ -309,21 +292,31 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
         highscoreMessagePos.yPos
     );
 
-    // if (scoreMessage != null) {
-    //     let scoreMessageSize = ctx.measureText(scoreMessage).width;
-    //     let scoreMessagePos = {
-    //         xPos: xPos - Math.round(scoreMessageSize / 2),
-    //         yPos: yPos + 75,
-    //     };
+    if (scoreMessage != null) {
+        let scoreMessageSize = ctx.measureText(scoreMessage).width;
+        let scoreMessagePos = {
+            xPos: xPos - Math.round(scoreMessageSize / 2),
+            yPos: yPos + 25,
+        };
 
-    //     drawText(
-    //         ctx,
-    //         scoreMessage,
-    //         scoreMessagePos.xPos,
-    //         scoreMessagePos.yPos,
-    //         12
-    //     );
-    // }
+        drawText(ctx, scoreMessage, scoreMessagePos.xPos, scoreMessagePos.yPos);
+    }
+
+    let gameOverMessage = isMobile
+        ? "Tap to play again"
+        : "Press spacebar to play again";
+    let gameOverMessageSize = ctx.measureText(gameOverMessage).width;
+    let gameOverMessagePos = {
+        xPos: xPos - Math.round(gameOverMessageSize / 2),
+        yPos: yPos + 75,
+    };
+
+    drawText(
+        ctx,
+        gameOverMessage,
+        gameOverMessagePos.xPos,
+        gameOverMessagePos.yPos
+    );
 }
 
 function setHighscore(score) {
