@@ -251,15 +251,6 @@ function checkCollision(snake, point) {
     return collisionDetected;
 }
 
-function legacyDrawText(ctx, text, xPos, yPos, fontSize = 16) {
-    ctx.save();
-    ctx.font = `${fontSize}px Arial`;
-    ctx.fillStyle = "black";
-    let a = ctx.measureText(text);
-    ctx.fillText(text, xPos, yPos);
-    ctx.restore();
-}
-
 function drawText(
     ctx,
     text,
@@ -290,6 +281,7 @@ function drawNewGame(ctx, xPos, yPos) {
 }
 
 function drawGameOver(ctx, reachedScore, xPos, yPos) {
+    let labelPosition = -25;
     let savedHighscore = getHighscore();
     let isHighscoreBeaten = reachedScore > savedHighscore;
     let highscoreMessage = isHighscoreBeaten
@@ -302,19 +294,21 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
     drawText(
         ctx,
         highscoreMessage,
-        (textSize) => new Point(xPos - Math.round(textSize / 2), yPos)
+        (textSize) =>
+            new Point(xPos - Math.round(textSize / 2), yPos + labelPosition)
     );
 
     if (scoreMessage != null) {
-        let scoreMessageSize = ctx.measureText(scoreMessage).width;
-
+        labelPosition +=25;
         drawText(
             ctx,
             scoreMessage,
-            (textSize) => new Point(xPos - Math.round(textSize / 2), yPos + 25)
+            (textSize) =>
+                new Point(xPos - Math.round(textSize / 2), yPos + labelPosition)
         );
     }
 
+    labelPosition += 50;
     let gameOverMessage = isMobile
         ? "Tap to play again"
         : "Press spacebar to play again";
@@ -322,10 +316,8 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
     drawText(
         ctx,
         gameOverMessage,
-        (textSize) => new Point(
-            xPos - Math.round(textSize / 2),
-            yPos + 75
-        )
+        (textSize) =>
+            new Point(xPos - Math.round(textSize / 2), yPos + labelPosition)
     );
 }
 
@@ -380,7 +372,7 @@ class Food {
         let ctx = this.ctx;
         let size = this.size;
 
-        ctx.fillStyle = "orange";
+        ctx.fillStyle = "red";
         ctx.fillRect(position.x * size, position.y * size, size, size);
         // This is the border of the square
         ctx.strokeStyle = "darkgreen";
