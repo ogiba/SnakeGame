@@ -49,7 +49,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let score = 0;
     let highscore = 0;
     let snake = new Snake(ctx, 4);
-    let food = new Food(ctx);
+    let food = FoodGenerator.generateOrange(ctx);
     let gameSpeed = 100;
     isMobile = window.innerWidth <= 800;
 
@@ -106,8 +106,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     food.position.y === tailY
                 ) {
                     snake.grow(tailX, tailY);
+                    score += food.value;
                     food.relocate();
-                    score++;
                 } else {
                     snake.move(tailX, tailY);
                     food.locate();
@@ -299,7 +299,7 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
     );
 
     if (scoreMessage != null) {
-        labelPosition +=25;
+        labelPosition += 25;
         drawText(
             ctx,
             scoreMessage,
@@ -361,9 +361,11 @@ class Point {
 }
 
 class Food {
-    constructor(context, size = 10) {
+    constructor(context, color = "red", size = 10) {
         this.ctx = context;
         this.size = size;
+        this.color = color;
+        this.value = 1;
     }
 
     draw(position) {
@@ -372,7 +374,7 @@ class Food {
         let ctx = this.ctx;
         let size = this.size;
 
-        ctx.fillStyle = "red";
+        ctx.fillStyle = this.color;
         ctx.fillRect(position.x * size, position.y * size, size, size);
         // This is the border of the square
         ctx.strokeStyle = "darkgreen";
@@ -397,6 +399,10 @@ class Food {
         } else {
             this.relocate();
         }
+    }
+
+    setValue(value = 1) {
+        this.value = value;
     }
 }
 
@@ -473,5 +479,18 @@ class Snake {
         for (let i = 0; i < length; i++) {
             this.draw(tail[i].x, tail[i].y);
         }
+    }
+}
+
+class FoodGenerator {
+
+    static generateOrange(ctx) {
+        return new Food(ctx, "orange");
+    }
+
+    static generateApple(ctx) {
+        let apple = Food(ctx, "red");
+        apple.setValue(2);
+        return apple;
     }
 }
