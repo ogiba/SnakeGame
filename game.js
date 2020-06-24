@@ -151,8 +151,7 @@ window.addEventListener("DOMContentLoaded", () => {
         drawGameOver(
             ctx,
             reachedScore,
-            gameViewSize.width / 2,
-            gameViewSize.height / 2
+            new Point(gameViewSize.width / 2, gameViewSize.height / 2)
         );
     }
 
@@ -280,7 +279,7 @@ function drawNewGame(ctx, xPos, yPos) {
     );
 }
 
-function drawGameOver(ctx, reachedScore, xPos, yPos) {
+function drawGameOver(ctx, reachedScore, position) {
     let labelPosition = -25;
     let savedHighscore = getHighscore();
     let isHighscoreBeaten = reachedScore > savedHighscore;
@@ -295,7 +294,10 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
         ctx,
         highscoreMessage,
         (textSize) =>
-            new Point(xPos - Math.round(textSize / 2), yPos + labelPosition)
+            new Point(
+                position.x - Math.round(textSize / 2),
+                position.y + labelPosition
+            )
     );
 
     if (scoreMessage != null) {
@@ -304,7 +306,10 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
             ctx,
             scoreMessage,
             (textSize) =>
-                new Point(xPos - Math.round(textSize / 2), yPos + labelPosition)
+                new Point(
+                    position.x - Math.round(textSize / 2),
+                    position.y + labelPosition
+                )
         );
     }
 
@@ -317,7 +322,10 @@ function drawGameOver(ctx, reachedScore, xPos, yPos) {
         ctx,
         gameOverMessage,
         (textSize) =>
-            new Point(xPos - Math.round(textSize / 2), yPos + labelPosition)
+            new Point(
+                position.x - Math.round(textSize / 2),
+                position.y + labelPosition
+            )
     );
 }
 
@@ -483,7 +491,6 @@ class Snake {
 }
 
 class FoodGenerator {
-
     static generateOrange(ctx) {
         return new Food(ctx, "orange");
     }
