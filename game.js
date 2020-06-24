@@ -108,10 +108,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     snake.grow(tailX, tailY);
                     score += food.value;
 
-                    let firstRoll = diceRoll()
-                    let secondRoll = diceRoll()
-                    if (firstRoll == secondRoll) {
-                        console.log("Should be apple")
+                    if (tryRollDoubled()) {
                         food = FoodGenerator.generateApple(ctx);
                         food.locate();
                     } else {
@@ -371,6 +368,12 @@ function getCookie(key) {
     return null;
 }
 
+function tryRollDoubled() {
+    let firstDiceRoll = diceRoll()
+    let secondDiceRoll = diceRoll()
+    return firstDiceRoll === secondDiceRoll
+}
+
 function diceRoll() {
     return Math.floor(Math.random() * (6 - 1 + 1) + 1);
 }
@@ -505,6 +508,7 @@ class Snake {
 }
 
 class FoodGenerator {
+    
     static generateOrange(ctx) {
         return new Food(ctx, "orange");
     }
