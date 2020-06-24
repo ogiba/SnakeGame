@@ -107,7 +107,17 @@ window.addEventListener("DOMContentLoaded", () => {
                 ) {
                     snake.grow(tailX, tailY);
                     score += food.value;
-                    food.relocate();
+
+                    let firstRoll = diceRoll()
+                    let secondRoll = diceRoll()
+                    if (firstRoll == secondRoll) {
+                        console.log("Should be apple")
+                        food = FoodGenerator.generateApple(ctx);
+                        food.locate();
+                    } else {
+                        food = FoodGenerator.generateOrange(ctx);
+                        food.locate();
+                    }
                 } else {
                     snake.move(tailX, tailY);
                     food.locate();
@@ -362,7 +372,7 @@ function getCookie(key) {
 }
 
 function diceRoll() {
-    return Math.floor(Math.random() * ((6 - 1) + 1) + 1);
+    return Math.floor(Math.random() * (6 - 1 + 1) + 1);
 }
 
 class Point {
@@ -500,7 +510,7 @@ class FoodGenerator {
     }
 
     static generateApple(ctx) {
-        let apple = Food(ctx, "red");
+        let apple = new Food(ctx, "red");
         apple.setValue(2);
         return apple;
     }
