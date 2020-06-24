@@ -361,6 +361,10 @@ function getCookie(key) {
     return null;
 }
 
+function diceRoll() {
+    return Math.floor(Math.random() * ((6 - 1) + 1) + 1);
+}
+
 class Point {
     constructor(x, y) {
         this.x = x;
