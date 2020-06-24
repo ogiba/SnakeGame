@@ -369,13 +369,9 @@ function getCookie(key) {
 }
 
 function tryRollDoubled() {
-    let firstDiceRoll = diceRoll()
-    let secondDiceRoll = diceRoll()
-    return firstDiceRoll === secondDiceRoll
-}
-
-function diceRoll() {
-    return Math.floor(Math.random() * (6 - 1 + 1) + 1);
+    let firstDiceRoll = Dice.roll();
+    let secondDiceRoll = Dice.roll();
+    return firstDiceRoll === secondDiceRoll;
 }
 
 class Point {
@@ -507,8 +503,13 @@ class Snake {
     }
 }
 
+class Dice {
+    static roll() {
+        return Math.floor(Math.random() * (6 - 1 + 1) + 1);
+    }
+}
+
 class FoodGenerator {
-    
     static generateOrange(ctx) {
         return new Food(ctx, "orange");
     }
