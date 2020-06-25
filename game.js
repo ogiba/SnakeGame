@@ -108,16 +108,16 @@ window.addEventListener("DOMContentLoaded", () => {
                     snake.grow(tailX, tailY);
                     score += food.value;
 
-                    food = FoodGenerator.generateFood(ctx)
-                    food.locate()
+                    food = FoodGenerator.generateFood(ctx);
+                    food.locate();
+
+                    increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
                 } else {
                     snake.move(tailX, tailY);
                     food.locate();
                 }
 
                 drawScore(ctx, score);
-
-                increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
             } else if (gameState == GameState.GAME_OVER) {
                 drawGameOverState(ctx, highscore);
             }
@@ -125,25 +125,25 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 
     function increaseGameDifficultyLevel(gameLoop, score, gameSpeed) {
-        if (score === 10 && gameSpeed > 50) {
+        if (score >= 10 && score < 20 && gameSpeed > 90) {
             clearInterval(gameLoop);
             gameThread(90);
-        } else if (score == 20 && gameSpeed > 50) {
+        } else if (score >= 20 && score < 30 && gameSpeed > 80) {
             clearInterval(gameLoop);
             gameThread(80);
-        } else if (score == 30 && gameSpeed > 50) {
+        } else if (score >= 30 && score < 50 && gameSpeed > 60) {
             clearInterval(gameLoop);
             gameThread(60);
-        } else if (score == 50 && gameSpeed > 10) {
+        } else if (score >= 50 && score < 100 && gameSpeed > 50) {
             clearInterval(gameLoop);
             gameThread(50);
-        } else if (score == 100 && gameSpeed > 10) {
+        } else if (score >= 100 && score < 150 && gameSpeed > 40) {
             clearInterval(gameLoop);
             gameThread(40);
-        } else if (score == 150 && gameSpeed > 10) {
+        } else if (score >= 150 && score < 300 && gameSpeed > 30) {
             clearInterval(gameLoop);
             gameThread(30);
-        } else if (score == 300 && gameSpeed > 10) {
+        } else if (score >= 300 && gameSpeed > 20) {
             clearInterval(gameLoop);
             gameThread(20);
         }
