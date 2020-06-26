@@ -353,11 +353,14 @@ function setCookie(cookie) {
 }
 
 function getCookie(key) {
-    let cookies = document.cookie.split(";");
-    for (const index in cookies) {
-        let cookie = cookies[index];
-        if (cookie.includes(key)) {
-            return cookie.split("=")[1];
+    let cookies = document.cookie.split(";").map((cookie) => {
+        let parts = cookie.split("=");
+        return new Cookie(parts[0], parts[1]);
+    });
+
+    for (const cookie of cookies) {
+        if (cookie._key == key) {
+            return cookie._value;
         }
     }
     return null;
