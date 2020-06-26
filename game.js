@@ -338,7 +338,7 @@ function setHighscore(score) {
         savedHighscore == "" ||
         savedHighscore < score
     ) {
-        setCookie("highscore", score);
+        setCookie(new Cookie("highscore", score));
     }
 }
 
@@ -346,10 +346,10 @@ function getHighscore() {
     return getCookie("highscore");
 }
 
-function setCookie(key, value) {
+function setCookie(cookie) {
     let expires = new Date();
     expires.setDate(expires.getTime() + 100 * 60 * 60 * 24 * 100);
-    document.cookie = `${key}=${value};expires=${expires.toGMTString()}`;
+    document.cookie = `${cookie.toString()};expires=${expires.toGMTString()}`;
 }
 
 function getCookie(key) {
@@ -503,6 +503,17 @@ class Dice {
         return Math.floor(Math.random() * (6 - 1 + 1) + 1);
     }
 }
+
+class Cookie {
+    constructor(key, value) {
+        this._key = key;
+        this._value = value;
+    }
+}
+
+Cookie.prototype.toString = function () {
+    return `${this._key}=${this._value}`;
+};
 
 class FoodGenerator {
     static generateFood(ctx) {
