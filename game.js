@@ -100,11 +100,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                if (
-                    food.position !== undefined &&
-                    food.position.x === tailX &&
-                    food.position.y === tailY
-                ) {
+                if (food.collide(new Point(tailX, tailY))) {
                     snake.grow(tailX, tailY);
                     score += food.value;
 
@@ -390,6 +386,14 @@ class Food {
 
     setValue(value = 1) {
         this.value = value;
+    }
+
+    collide(point) {
+        return (
+            this.position !== undefined &&
+            this.position.x === point.x &&
+            this.position.y === point.y
+        );
     }
 }
 
