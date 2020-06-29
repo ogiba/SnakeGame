@@ -54,7 +54,7 @@ window.addEventListener("DOMContentLoaded", () => {
     isMobile = window.innerWidth <= 800;
 
     registerKeyEventsListener();
-    handleTapEvents();
+    registerTapEventListener();
     gameThread(gameSpeed);
 
     function gameThread(speed) {
@@ -202,7 +202,7 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-function handleTapEvents() {
+function registerTapEventListener() {
     document.addEventListener("touchend", () => startGame(), false);
 }
 
