@@ -389,10 +389,9 @@ class Food {
     }
 
     collide(point) {
-        return (
-            this.position !== undefined &&
-            this.position.x === point.x &&
-            this.position.y === point.y
+        return Optional.of(this.position).getOrDefault(
+            (position) => position.x === point.x && position.y === point.y,
+            false
         );
     }
 }
