@@ -53,7 +53,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let gameSpeed = 100;
     isMobile = window.innerWidth <= 800;
 
-    handleKeyEvents();
+    registerKeyEventsListener();
     handleTapEvents();
     gameThread(gameSpeed);
 
@@ -167,7 +167,7 @@ window.addEventListener("DOMContentLoaded", () => {
         gameState = GameState.GAME_OVER;
     }
 
-    function handleKeyEvents() {
+    function registerKeyEventsListener() {
         document.onkeydown = (event) => {
             switch (event.keyCode) {
                 case KeyCode.LEFT_ARROW:
