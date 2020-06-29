@@ -59,10 +59,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function gameThread(speed) {
         let gameLoop = setInterval(() => {
-            ctx.fillStyle = "lightgrey";
-            ctx.fillRect(0, 0, gameViewSize.width, gameViewSize.height);
-            ctx.strokeStyle = "black";
-            ctx.strokeRect(0, 0, gameViewSize.width, gameViewSize.height);
+            drawBackground(ctx)
 
             if (gameState == GameState.NEW_GAME) {
                 drawNewGame(
@@ -234,6 +231,15 @@ function goRight() {
         direction = MoveDirection.RIGHT;
         console.log(direction);
     }
+}
+
+function drawBackground(context) {
+    context.save()
+    context.fillStyle = "lightgrey";
+    context.fillRect(0, 0, gameViewSize.width, gameViewSize.height);
+    context.strokeStyle = "black";
+    context.strokeRect(0, 0, gameViewSize.width, gameViewSize.height);
+    context.restore()
 }
 
 function drawText(
