@@ -547,11 +547,19 @@ class Optional {
     }
 
     getOrNull(presentCallback = (value) => null) {
-        if (this._value == null || this._value == undefined) {
-            return null;
-        } else {
+        return this.getOrDefault(presentCallback, null);
+    }
+
+    getOrDefault(presentCallback, defaultValue) {
+        if (this.checkIfValueExists()) {
             return presentCallback(this._value);
+        } else {
+            return defaultValue;
         }
+    }
+
+    checkIfValueExists() {
+        return this._value != null && this._value != undefined;
     }
 
     static of(value) {
