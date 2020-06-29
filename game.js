@@ -94,7 +94,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     tailX >= gameViewSize.width / snakeSize ||
                     tailY === -1 ||
                     tailY >= gameViewSize.height / snakeSize ||
-                    checkCollision(snake, new Point(tailX, tailY))
+                    snake.checkCollision(new Point(tailX, tailY))
                 ) {
                     resetGameState();
                     return;
@@ -238,18 +238,6 @@ function goRight() {
         direction = MoveDirection.RIGHT;
         console.log(direction);
     }
-}
-
-function checkCollision(snake, point) {
-    let collisionDetected = false;
-
-    snake.tail.forEach((itemPoint) => {
-        if (itemPoint.x === point.x && itemPoint.y === point.y) {
-            collisionDetected = true;
-        }
-    });
-
-    return collisionDetected;
 }
 
 function drawText(
@@ -478,6 +466,18 @@ class Snake {
         for (let i = 0; i < length; i++) {
             this.draw(tail[i].x, tail[i].y);
         }
+    }
+
+    checkCollision(point) {
+        let collisionDetected = false;
+
+        this._tail.forEach((itemPoint) => {
+            if (itemPoint.x === point.x && itemPoint.y === point.y) {
+                collisionDetected = true;
+            }
+        });
+
+        return collisionDetected;
     }
 }
 
