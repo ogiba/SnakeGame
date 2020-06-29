@@ -511,12 +511,9 @@ class CookieManager {
             return new Cookie(parts[0], parts[1]);
         });
 
-        for (const cookie of cookies) {
-            if (cookie._key == key) {
-                return cookie._value;
-            }
-        }
-        return null;
+        return Optional.of(
+            cookies.find((cookie) => cookie._key == key)
+        ).getOrNull((cookie) => cookie._value);
     }
 }
 
@@ -537,5 +534,23 @@ class FoodGenerator {
         let apple = new Food(ctx, "red");
         apple.setValue(2);
         return apple;
+    }
+}
+
+class Optional {
+    constructor(value) {
+        this._value = value;
+    }
+
+    getOrNull(presentCallback = (value) => null) {
+        if (this._value == null || this._value == undefined) {
+            return null;
+        } else {
+            return presentCallback(this._value);
+        }
+    }
+
+    static of(value) {
+        return new Optional(value);
     }
 }
