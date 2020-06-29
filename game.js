@@ -338,32 +338,12 @@ function setHighscore(score) {
         savedHighscore == "" ||
         savedHighscore < score
     ) {
-        setCookie(new Cookie("highscore", score));
+        CookieManager.setCookie(new Cookie("highscore", score));
     }
 }
 
 function getHighscore() {
-    return getCookie("highscore");
-}
-
-function setCookie(cookie) {
-    let expires = new Date();
-    expires.setDate(expires.getTime() + 100 * 60 * 60 * 24 * 100);
-    document.cookie = `${cookie.toString()};expires=${expires.toGMTString()}`;
-}
-
-function getCookie(key) {
-    let cookies = document.cookie.split(";").map((cookie) => {
-        let parts = cookie.split("=");
-        return new Cookie(parts[0], parts[1]);
-    });
-
-    for (const cookie of cookies) {
-        if (cookie._key == key) {
-            return cookie._value;
-        }
-    }
-    return null;
+    return CookieManager.getCookie("highscore");
 }
 
 function tryRollDoubled() {
@@ -517,6 +497,28 @@ class Cookie {
 Cookie.prototype.toString = function () {
     return `${this._key}=${this._value}`;
 };
+
+class CookieManager {
+    static setCookie(cookie) {
+        let expires = new Date();
+        expires.setDate(expires.getTime() + 100 * 60 * 60 * 24 * 100);
+        document.cookie = `${cookie.toString()};expires=${expires.toGMTString()}`;
+    }
+
+    static getCookie(key) {
+        let cookies = document.cookie.split(";").map((cookie) => {
+            let parts = cookie.split("=");
+            return new Cookie(parts[0], parts[1]);
+        });
+
+        for (const cookie of cookies) {
+            if (cookie._key == key) {
+                return cookie._value;
+            }
+        }
+        return null;
+    }
+}
 
 class FoodGenerator {
     static generateFood(ctx) {
