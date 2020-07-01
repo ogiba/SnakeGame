@@ -363,11 +363,13 @@ class Food {
         let ctx = this.ctx;
         let size = this.size;
 
+        ctx.save()
         ctx.fillStyle = this.color;
         ctx.fillRect(position.x * size, position.y * size, size, size);
         // This is the border of the square
         ctx.strokeStyle = "darkgreen";
         ctx.strokeRect(position.x * size, position.y * size, size, size);
+        ctx.restore()
     }
 
     relocate() {
@@ -454,11 +456,13 @@ class Snake {
     draw(x, y) {
         let ctx = this.ctx;
 
+        ctx.save()
         ctx.fillStyle = "green";
         ctx.fillRect(x * snakeSize, y * snakeSize, snakeSize, snakeSize);
         // This is the border of the square
         ctx.strokeStyle = "darkgreen";
         ctx.strokeRect(x * snakeSize, y * snakeSize, snakeSize, snakeSize);
+        ctx.restore()
     }
 
     move(x, y) {
