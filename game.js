@@ -68,8 +68,8 @@ window.addEventListener("DOMContentLoaded", () => {
                     gameViewSize.height / 2
                 );
             } else if (gameState == GameState.RUNNING) {
-                let tailX = snake.tail[0].x;
-                let tailY = snake.tail[0].y;
+                let tailX = snake.tail.first().x;
+                let tailY = snake.tail.first().y;
 
                 switch (direction) {
                     case MoveDirection.RIGHT:
@@ -570,4 +570,8 @@ class Optional {
     static of(value) {
         return new Optional(value);
     }
+}
+
+Array.prototype.first = function() {
+    return this[0]
 }
