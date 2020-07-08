@@ -76,27 +76,23 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 switch (direction) {
                     case MoveDirection.RIGHT:
-                        // tailX++;
                         a = 1;
                         break;
                     case MoveDirection.DOWN:
-                        // tailY++;
                         b = 1;
                         break;
                     case MoveDirection.UP:
-                        // tailY--;
                         b = -1;
                         break;
                     case MoveDirection.LEFT:
                         a = -1;
-                        // tailX--;
                         break;
                 }
 
                 if (
-                    tailX === -1 ||
+                    tailX <= -1 ||
                     tailX >= gameViewSize.width - snakeSize ||
-                    tailY === -1 ||
+                    tailY <= -1 ||
                     tailY >= gameViewSize.height - snakeSize
                     // ||
                     // snake.checkCollision(new Point(tailX, tailY))
@@ -372,7 +368,7 @@ class Food {
         let size = this.size;
 
         ctx.save();
-        ctx.translate(position.x, position.y)
+        ctx.translate(position.x, position.y);
         ctx.fillStyle = this.color;
         ctx.fillRect(size, size, size, size);
         // This is the border of the square
@@ -386,16 +382,16 @@ class Food {
 
         // let x = Math.round(Math.random() * availableSpace);
         // let y = Math.round(Math.random() * availableSpace);
-        let x = this.rand_10(0, gameViewSize.height - this.size)
-        let y = this.rand_10(0, gameViewSize.height - this.size)
+        let x = this.rand_10(0, gameViewSize.height - this.size);
+        let y = this.rand_10(0, gameViewSize.height - this.size);
 
         this.position = new Point(x, y);
 
         this.draw(this.position);
     }
 
-    rand_10(min, max){
-        return Math.round((Math.random()*(max-min)+min)/10)*10;
+    rand_10(min, max) {
+        return Math.round((Math.random() * (max - min) + min) / 10) * 10;
     }
 
     locate() {
