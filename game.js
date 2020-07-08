@@ -31,6 +31,7 @@ let direction = MoveDirection.RIGHT;
 let gameViewSize = new Size(0, 0);
 let gameState = GameState.NEW_GAME;
 let isMobile = false;
+let moveCounter = 0;
 
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
@@ -50,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let highscore = 0;
     let snake = new Snake(ctx, 4);
     let food = FoodGenerator.generateOrange(ctx);
-    let gameSpeed = 100;
+    let gameSpeed = 20;
     isMobile = window.innerWidth <= 800;
 
     registerKeyEventsListener();
@@ -59,7 +60,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function gameThread(speed) {
         let gameLoop = setInterval(() => {
-            drawBackground(ctx)
+            drawBackground(ctx);
 
             if (gameState == GameState.NEW_GAME) {
                 drawNewGame(
@@ -70,28 +71,35 @@ window.addEventListener("DOMContentLoaded", () => {
             } else if (gameState == GameState.RUNNING) {
                 let tailX = snake.tail.first().x;
                 let tailY = snake.tail.first().y;
+                let a = 0;
+                let b = 0;
 
                 switch (direction) {
                     case MoveDirection.RIGHT:
-                        tailX++;
+                        // tailX++;
+                        a = 1;
                         break;
                     case MoveDirection.DOWN:
-                        tailY++;
+                        // tailY++;
+                        b = 1;
                         break;
                     case MoveDirection.UP:
-                        tailY--;
+                        // tailY--;
+                        b = -1;
                         break;
                     case MoveDirection.LEFT:
-                        tailX--;
+                        a = -1;
+                        // tailX--;
                         break;
                 }
 
                 if (
                     tailX === -1 ||
-                    tailX >= gameViewSize.width / snakeSize ||
+                    tailX >= gameViewSize.width - snakeSize ||
                     tailY === -1 ||
-                    tailY >= gameViewSize.height / snakeSize ||
-                    snake.checkCollision(new Point(tailX, tailY))
+                    tailY >= gameViewSize.height - snakeSize
+                    // ||
+                    // snake.checkCollision(new Point(tailX, tailY))
                 ) {
                     resetGameState();
                     return;
@@ -106,7 +114,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                     increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
                 } else {
-                    snake.move(tailX, tailY);
+                    snake.move(a, b);
                     food.locate();
                 }
 
@@ -234,12 +242,12 @@ function goRight() {
 }
 
 function drawBackground(context) {
-    context.save()
+    context.save();
     context.fillStyle = "lightgrey";
     context.fillRect(0, 0, gameViewSize.width, gameViewSize.height);
     context.strokeStyle = "black";
     context.strokeRect(0, 0, gameViewSize.width, gameViewSize.height);
-    context.restore()
+    context.restore();
 }
 
 function drawText(
@@ -363,24 +371,31 @@ class Food {
         let ctx = this.ctx;
         let size = this.size;
 
-        ctx.save()
+        ctx.save();
+        ctx.translate(position.x, position.y)
         ctx.fillStyle = this.color;
-        ctx.fillRect(position.x * size, position.y * size, size, size);
+        ctx.fillRect(size, size, size, size);
         // This is the border of the square
         ctx.strokeStyle = "darkgreen";
-        ctx.strokeRect(position.x * size, position.y * size, size, size);
-        ctx.restore()
+        ctx.strokeRect(size, size, size, size);
+        ctx.restore();
     }
 
     relocate() {
         let availableSpace = (gameViewSize.height - this.size) / this.size;
 
-        let x = Math.round(Math.random() * availableSpace);
-        let y = Math.round(Math.random() * availableSpace);
+        // let x = Math.round(Math.random() * availableSpace);
+        // let y = Math.round(Math.random() * availableSpace);
+        let x = this.rand_10(0, gameViewSize.height - this.size)
+        let y = this.rand_10(0, gameViewSize.height - this.size)
 
         this.position = new Point(x, y);
 
         this.draw(this.position);
+    }
+
+    rand_10(min, max){
+        return Math.round((Math.random()*(max-min)+min)/10)*10;
     }
 
     locate() {
@@ -409,10 +424,11 @@ class Snake {
         this.ctx = ctx;
         this._length = size;
         this._tail = [];
+        this.speed = 1;
 
         // Using a for loop we push the elements inside the array(squares).
         // Every element will have y = 0 and the x will take the value of the index.
-        for (let i = this._length; i >= 0; i--) {
+        for (let i = this._length * snakeSize; i >= 0; i -= snakeSize) {
             this._tail.push(new Point(i, 0));
         }
     }
@@ -456,27 +472,58 @@ class Snake {
     draw(x, y) {
         let ctx = this.ctx;
 
-        ctx.save()
+        ctx.save();
+        ctx.translate(x, y);
         ctx.fillStyle = "green";
-        ctx.fillRect(x * snakeSize, y * snakeSize, snakeSize, snakeSize);
+        ctx.fillRect(snakeSize, snakeSize, snakeSize, snakeSize);
         // This is the border of the square
         ctx.strokeStyle = "darkgreen";
-        ctx.strokeRect(x * snakeSize, y * snakeSize, snakeSize, snakeSize);
-        ctx.restore()
+        ctx.strokeRect(snakeSize, snakeSize, snakeSize, snakeSize);
+        ctx.restore();
     }
 
     move(x, y) {
         let length = this._length;
+        let firstElem = this._tail[0];
+        let secElem = this._tail[1];
 
-        let tailPeak = this._tail.pop(); //pops out the last cell
-        tailPeak.x = x;
-        tailPeak.y = y;
+        // if (firstElem.y % 10 != 0) {
+        //     firstElem.y += y;
+        //     // this._tail.splice(0, 0, firstElem);
+        // } else {
+        //     let tailPeak = this._tail.pop(); //pops out the last cell
+        //     tailPeak.x = this._tail[0].x;
+        //     tailPeak.y = this._tail[0].y + y;
+        //     this._tail.unshift(tailPeak);
+        // }
+        // let tailPeak = this._tail.pop();
 
-        this._tail.unshift(tailPeak);
+        // for (let i = 0; i < this._tail.length; i++) {
+        //     let elem = this._tail[i];
+        //     if (x != 0) {
+        //         elem.x = tailPeak.x - snakeSize * (i + 1);
+        //     } else {
+        //         elem.x = tailPeak.x
+        //     }
+        //     // elem.y = tailPeak.y - snakeSize * (i + 1);
+        // }
+
+        // this._tail.unshift(tailPeak);
+        moveCounter += 1;
+
+        if (moveCounter >= 10) {
+            let tailPeak = this._tail.pop(); //pops out the last cell
+            tailPeak.x = this._tail[0].x + x * 10;
+            tailPeak.y = this._tail[0].y + y * 10;
+            this._tail.unshift(tailPeak);
+            moveCounter = 0;
+        }
 
         let tail = this._tail;
 
         for (let i = 0; i < length; i++) {
+            // tail[i].x += x;
+            // tail[i].y += y;
             this.draw(tail[i].x, tail[i].y);
         }
     }
@@ -576,6 +623,6 @@ class Optional {
     }
 }
 
-Array.prototype.first = function() {
-    return this[0]
-}
+Array.prototype.first = function () {
+    return this[0];
+};
