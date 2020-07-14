@@ -89,18 +89,6 @@ window.addEventListener("DOMContentLoaded", () => {
                         break;
                 }
 
-                if (
-                    tailX <= -1 ||
-                    tailX >= gameViewSize.width - snakeSize ||
-                    tailY <= -1 ||
-                    tailY >= gameViewSize.height - snakeSize
-                    // ||
-                    // snake.checkCollision(new Point(tailX, tailY))
-                ) {
-                    resetGameState();
-                    return;
-                }
-
                 if (food.collide(new Point(tailX, tailY))) {
                     snake.grow(tailX, tailY);
                     score += food.value;
@@ -112,6 +100,17 @@ window.addEventListener("DOMContentLoaded", () => {
                 } else {
                     snake.move(a, b);
                     food.locate();
+                }
+
+                if (
+                    tailX <= -1 ||
+                    tailX >= gameViewSize.width - snakeSize ||
+                    tailY <= -1 ||
+                    tailY >= gameViewSize.height - snakeSize ||
+                    snake.checkCollision(new Point(tailX, tailY))
+                ) {
+                    resetGameState();
+                    return;
                 }
 
                 drawScore(ctx, score);
@@ -480,37 +479,13 @@ class Snake {
 
     move(x, y) {
         let length = this._length;
-        let firstElem = this._tail[0];
-        let secElem = this._tail[1];
 
-        // if (firstElem.y % 10 != 0) {
-        //     firstElem.y += y;
-        //     // this._tail.splice(0, 0, firstElem);
-        // } else {
-        //     let tailPeak = this._tail.pop(); //pops out the last cell
-        //     tailPeak.x = this._tail[0].x;
-        //     tailPeak.y = this._tail[0].y + y;
-        //     this._tail.unshift(tailPeak);
-        // }
-        // let tailPeak = this._tail.pop();
-
-        // for (let i = 0; i < this._tail.length; i++) {
-        //     let elem = this._tail[i];
-        //     if (x != 0) {
-        //         elem.x = tailPeak.x - snakeSize * (i + 1);
-        //     } else {
-        //         elem.x = tailPeak.x
-        //     }
-        //     // elem.y = tailPeak.y - snakeSize * (i + 1);
-        // }
-
-        // this._tail.unshift(tailPeak);
         moveCounter += 1;
 
         if (moveCounter >= 10) {
             let tailPeak = this._tail.pop(); //pops out the last cell
-            tailPeak.x = this._tail[0].x + x * 10;
-            tailPeak.y = this._tail[0].y + y * 10;
+            tailPeak.x = this._tail.first().x + x * 10;
+            tailPeak.y = this._tail.first().y + y * 10;
             this._tail.unshift(tailPeak);
             moveCounter = 0;
         }
@@ -518,8 +493,6 @@ class Snake {
         let tail = this._tail;
 
         for (let i = 0; i < length; i++) {
-            // tail[i].x += x;
-            // tail[i].y += y;
             this.draw(tail[i].x, tail[i].y);
         }
     }
@@ -527,11 +500,13 @@ class Snake {
     checkCollision(point) {
         let collisionDetected = false;
 
-        this._tail.forEach((itemPoint) => {
-            if (itemPoint.x === point.x && itemPoint.y === point.y) {
-                collisionDetected = true;
-            }
-        });
+        if (moveCounter >= 10) {
+            this._tail.forEach((itemPoint) => {
+                if (itemPoint.x === point.x && itemPoint.y === point.y) {
+                    collisionDetected = true;
+                }
+            });
+        }
 
         return collisionDetected;
     }
