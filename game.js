@@ -89,6 +89,8 @@ window.addEventListener("DOMContentLoaded", () => {
                         break;
                 }
 
+                snake.move(a, b);
+
                 if (food.collide(new Point(tailX, tailY))) {
                     snake.grow(tailX, tailY);
                     score += food.value;
@@ -97,20 +99,10 @@ window.addEventListener("DOMContentLoaded", () => {
                     food.locate();
 
                     increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
-                } else {
-                    snake.move(a, b);
-                    food.locate();
-                }
-
-                if (
-                    tailX <= -1 ||
-                    tailX >= gameViewSize.width - snakeSize ||
-                    tailY <= -1 ||
-                    tailY >= gameViewSize.height - snakeSize ||
-                    snake.checkCollision(new Point(tailX, tailY))
-                ) {
+                } else if (snake.checkCollision(new Point(tailX, tailY))) {
                     resetGameState();
-                    return;
+                } else {
+                    food.locate();
                 }
 
                 drawScore(ctx, score);
@@ -498,15 +490,30 @@ class Snake {
     }
 
     checkCollision(point) {
+        let tail = Array.from(this._tail);
+        let head = tail.shift();
+
+        console.log(`head value: x:${head.x} y: ${head.y}`);
+        if (
+            head.x <= -1 ||
+            head.x >= gameViewSize.width - snakeSize ||
+            head.y <= -1 ||
+            head.y >= gameViewSize.height - snakeSize
+        ) {
+            return true;
+        }
+
         let collisionDetected = false;
 
-        if (moveCounter >= 10) {
-            this._tail.forEach((itemPoint) => {
-                if (itemPoint.x === point.x && itemPoint.y === point.y) {
-                    collisionDetected = true;
-                }
-            });
-        }
+        console.log(`move counter value ${moveCounter}`);
+        // if (moveCounter >= 10) {
+        tail.forEach((itemPoint) => {
+            console.log(`point value: x:${itemPoint.x} y: ${itemPoint.y}`);
+            if (itemPoint.x === head.x && itemPoint.y === head.y) {
+                collisionDetected = true;
+            }
+        });
+        // }
 
         return collisionDetected;
     }
