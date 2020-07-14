@@ -51,6 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let highscore = 0;
     let snake = new Snake(ctx, 4);
     let food = FoodGenerator.generateOrange(ctx);
+    food.locate()
     let gameSpeed = 20;
     isMobile = window.innerWidth <= 800;
 
@@ -91,8 +92,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 moveCounter += 1;
 
+                // food.locate();
+
                 if (moveCounter >= 10) {
-                    snake.move(a, b);
 
                     if (food.collide(new Point(tailX, tailY))) {
                         snake.grow(tailX, tailY);
@@ -102,14 +104,15 @@ window.addEventListener("DOMContentLoaded", () => {
                         food.locate();
 
                         increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
-                    } else {
-                        food.locate();
-                    }
-
-                    if (snake.checkCollision()) {
+                    } else if (snake.checkCollision()) {
                         resetGameState();
                         return;
                     }
+
+                    snake.move(a, b);
+                    // else {
+
+                    // }
 
                     moveCounter = 0;
                 }
