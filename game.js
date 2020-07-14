@@ -99,10 +99,13 @@ window.addEventListener("DOMContentLoaded", () => {
                     food.locate();
 
                     increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
-                } else if (snake.checkCollision(new Point(tailX, tailY))) {
-                    resetGameState();
                 } else {
                     food.locate();
+                }
+
+                if (snake.checkCollision()) {
+                    resetGameState();
+                    return;
                 }
 
                 drawScore(ctx, score);
@@ -489,11 +492,11 @@ class Snake {
         }
     }
 
-    checkCollision(point) {
-        let tail = Array.from(this._tail);
-        let head = tail.shift();
+    checkCollision() {
+        let tail = Array.from(this._tail)
+        let head = tail.shift()
 
-        console.log(`head value: x:${head.x} y: ${head.y}`);
+        console.log(`head value: x:${head.x} y: ${head.y}`)
         if (
             head.x <= -1 ||
             head.x >= gameViewSize.width - snakeSize ||
@@ -505,14 +508,14 @@ class Snake {
 
         let collisionDetected = false;
 
-        console.log(`move counter value ${moveCounter}`);
+        console.log(`move counter value ${moveCounter}`)
         // if (moveCounter >= 10) {
-        tail.forEach((itemPoint) => {
-            console.log(`point value: x:${itemPoint.x} y: ${itemPoint.y}`);
-            if (itemPoint.x === head.x && itemPoint.y === head.y) {
-                collisionDetected = true;
-            }
-        });
+            tail.forEach((itemPoint) => {
+                console.log(`point value: x:${itemPoint.x} y: ${itemPoint.y}`)
+                if (itemPoint.x === head.x && itemPoint.y === head.y) {
+                    collisionDetected = true;
+                }
+            });
         // }
 
         return collisionDetected;
