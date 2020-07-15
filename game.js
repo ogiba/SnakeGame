@@ -478,7 +478,7 @@ class Snake {
     grow(x, y) {
         let tailPeak = new Point(x, y);
 
-        this._tail.unshift(tailPeak);
+        this._tail.push(tailPeak);
 
         let tail = this._tail;
         this._length = tail.length;
