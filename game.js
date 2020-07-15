@@ -101,7 +101,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         food = FoodGenerator.generateFood(ctx);
                         food.locate();
 
-                        increaseGameDifficultyLevel(gameLoop, score);
+                        increaseGameDifficultyLevel(score);
                     } else if (snake.checkCollision()) {
                         resetGameState();
                         return;
@@ -122,7 +122,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }, speed);
     }
 
-    function increaseGameDifficultyLevel(gameLoop, score) {
+    function increaseGameDifficultyLevel(score) {
         if (score >= 10 && score < 20) {
             gameSpeed = 1.5
         } else if (score >= 20 && score < 30) {
