@@ -52,12 +52,12 @@ window.addEventListener("DOMContentLoaded", () => {
     let snake = new Snake(ctx, 4);
     let food = FoodGenerator.generateOrange(ctx);
     food.locate();
-    let gameSpeed = 20;
+    let gameRefreshRate = 20;
     isMobile = window.innerWidth <= 800;
 
     registerKeyEventsListener();
     registerTapEventListener();
-    gameThread(gameSpeed);
+    gameThread(gameRefreshRate);
 
     function gameThread(speed) {
         let gameLoop = setInterval(() => {
@@ -107,7 +107,7 @@ window.addEventListener("DOMContentLoaded", () => {
                     }
 
                     snake.move(a, b);
-                    
+
                     moveCounter = 0;
                 }
 
