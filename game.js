@@ -32,6 +32,7 @@ let gameViewSize = new Size(0, 0);
 let gameState = GameState.NEW_GAME;
 let isMobile = false;
 let moveCounter = 0;
+let gameSpeed = 1
 
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
@@ -90,7 +91,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         break;
                 }
 
-                moveCounter += 1;
+                moveCounter += gameSpeed;
 
                 if (moveCounter >= 10) {
                     if (food.collide(new Point(tailX, tailY))) {
@@ -100,7 +101,7 @@ window.addEventListener("DOMContentLoaded", () => {
                         food = FoodGenerator.generateFood(ctx);
                         food.locate();
 
-                        increaseGameDifficultyLevel(gameLoop, score, gameSpeed);
+                        increaseGameDifficultyLevel(gameLoop, score);
                     } else if (snake.checkCollision()) {
                         resetGameState();
                         return;
@@ -114,34 +115,28 @@ window.addEventListener("DOMContentLoaded", () => {
                 food.draw();
                 snake.draw();
                 drawScore(ctx, score);
+                drawText(ctx, `Current game speed is: ${gameSpeed}`, () => new Point(300, 20));
             } else if (gameState == GameState.GAME_OVER) {
                 drawGameOverState(ctx, highscore);
             }
         }, speed);
     }
 
-    function increaseGameDifficultyLevel(gameLoop, score, gameSpeed) {
-        if (score >= 10 && score < 20 && gameSpeed > 90) {
-            clearInterval(gameLoop);
-            gameThread(90);
-        } else if (score >= 20 && score < 30 && gameSpeed > 80) {
-            clearInterval(gameLoop);
-            gameThread(80);
-        } else if (score >= 30 && score < 50 && gameSpeed > 60) {
-            clearInterval(gameLoop);
-            gameThread(60);
-        } else if (score >= 50 && score < 100 && gameSpeed > 50) {
-            clearInterval(gameLoop);
-            gameThread(50);
-        } else if (score >= 100 && score < 150 && gameSpeed > 40) {
-            clearInterval(gameLoop);
-            gameThread(40);
-        } else if (score >= 150 && score < 300 && gameSpeed > 30) {
-            clearInterval(gameLoop);
-            gameThread(30);
-        } else if (score >= 300 && gameSpeed > 20) {
-            clearInterval(gameLoop);
-            gameThread(20);
+    function increaseGameDifficultyLevel(gameLoop, score) {
+        if (score >= 10 && score < 20) {
+            gameSpeed = 1.5
+        } else if (score >= 20 && score < 30) {
+            gameSpeed = 2.0
+        } else if (score >= 30 && score < 50) {
+            gameSpeed = 2.5
+        } else if (score >= 50 && score < 100) {
+            gameSpeed = 3
+        } else if (score >= 100 && score < 150) {
+            gameSpeed = 3.5
+        } else if (score >= 150 && score < 300) {
+            gameSpeed = 4
+        } else if (score >= 300) {
+            gameSpeed = 5
         }
     }
 
