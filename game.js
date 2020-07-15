@@ -51,7 +51,7 @@ window.addEventListener("DOMContentLoaded", () => {
     let highscore = 0;
     let snake = new Snake(ctx, 4);
     let food = FoodGenerator.generateOrange(ctx);
-    food.locate()
+    food.locate();
     let gameSpeed = 20;
     isMobile = window.innerWidth <= 800;
 
@@ -92,10 +92,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
                 moveCounter += 1;
 
-                // food.locate();
-
                 if (moveCounter >= 10) {
-
                     if (food.collide(new Point(tailX, tailY))) {
                         snake.grow(tailX, tailY);
                         score += food.value;
@@ -110,14 +107,11 @@ window.addEventListener("DOMContentLoaded", () => {
                     }
 
                     snake.move(a, b);
-                    // else {
-
-                    // }
-
+                    
                     moveCounter = 0;
                 }
 
-                food.draw2();
+                food.draw();
                 snake.draw();
                 drawScore(ctx, score);
             } else if (gameState == GameState.GAME_OVER) {
@@ -366,23 +360,7 @@ class Food {
         this.value = 1;
     }
 
-    draw(position) {
-        this.position = position;
-
-        let ctx = this.ctx;
-        let size = this.size;
-
-        ctx.save();
-        ctx.translate(position.x, position.y);
-        ctx.fillStyle = this.color;
-        ctx.fillRect(size, size, size, size);
-        // This is the border of the square
-        ctx.strokeStyle = "darkgreen";
-        ctx.strokeRect(size, size, size, size);
-        ctx.restore();
-    }
-
-    draw2() {
+    draw() {
         let position = this.position;
 
         if (position !== undefined) {
@@ -418,10 +396,7 @@ class Food {
     }
 
     locate() {
-        let position = this.position;
-        if (position !== undefined) {
-            // this.draw(position);
-        } else {
+        if (this.position === undefined) {
             this.relocate();
         }
     }
@@ -479,26 +454,7 @@ class Snake {
         let tailPeak = new Point(x, y);
 
         this._tail.push(tailPeak);
-
-        let tail = this._tail;
-        this._length = tail.length;
-
-        // for (let i = 0; i < tail.length; i++) {
-        //     this.draw2(tail[i].x, tail[i].y);
-        // }
-    }
-
-    draw2(x, y) {
-        let ctx = this.ctx;
-
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.fillStyle = "green";
-        ctx.fillRect(snakeSize, snakeSize, snakeSize, snakeSize);
-        // This is the border of the square
-        ctx.strokeStyle = "darkgreen";
-        ctx.strokeRect(snakeSize, snakeSize, snakeSize, snakeSize);
-        ctx.restore();
+        this._length = this._tail.length;
     }
 
     draw() {
@@ -523,23 +479,10 @@ class Snake {
     }
 
     move(x, y) {
-        let length = this._length;
-
-        // moveCounter += 1;
-
-        // if (moveCounter >= 10) {
         let tailPeak = this._tail.pop(); //pops out the last cell
         tailPeak.x = this._tail.first().x + x * 10;
         tailPeak.y = this._tail.first().y + y * 10;
         this._tail.unshift(tailPeak);
-        // moveCounter = 0;
-        // }
-
-        let tail = this._tail;
-
-        // for (let i = 0; i < length; i++) {
-        //     this.draw2(tail[i].x, tail[i].y);
-        // }
     }
 
     checkCollision() {
@@ -547,6 +490,7 @@ class Snake {
         let head = tail.shift();
 
         console.log(`head value: x:${head.x} y: ${head.y}`);
+
         if (
             head.x <= -1 ||
             head.x >= gameViewSize.width - snakeSize ||
@@ -559,15 +503,12 @@ class Snake {
         let collisionDetected = false;
 
         console.log(`move counter value ${moveCounter}`);
-        // if (moveCounter >= 10) {
         tail.forEach((itemPoint) => {
             console.log(`point value: x:${itemPoint.x} y: ${itemPoint.y}`);
             if (itemPoint.x === head.x && itemPoint.y === head.y) {
                 collisionDetected = true;
             }
         });
-        // }
-
         return collisionDetected;
     }
 }
