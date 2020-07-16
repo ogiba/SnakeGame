@@ -57,7 +57,7 @@ window.addEventListener("DOMContentLoaded", () => {
     gameThread(gameRefreshRate);
 
     function gameThread(speed) {
-        let gameLoop = setInterval(() => {
+        setInterval(() => {
             drawBackground(ctx);
 
             if (gameState == GameState.NEW_GAME) {
