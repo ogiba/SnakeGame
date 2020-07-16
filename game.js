@@ -335,12 +335,6 @@ function getHighscore() {
     return CookieManager.getCookie("highscore");
 }
 
-function tryRollDoubled() {
-    let firstDiceRoll = Dice.roll();
-    let secondDiceRoll = Dice.roll();
-    return firstDiceRoll === secondDiceRoll;
-}
-
 class Point {
     constructor(x, y) {
         this.x = x;
