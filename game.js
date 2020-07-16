@@ -111,11 +111,6 @@ window.addEventListener("DOMContentLoaded", () => {
                 food.draw();
                 snake.draw();
                 drawScore(ctx, score);
-                drawText(
-                    ctx,
-                    `Current game speed is: ${gameSpeed}`,
-                    () => new Point(300, 20)
-                );
             } else if (gameState == GameState.GAME_OVER) {
                 drawGameOverState(ctx, highscore);
             }
@@ -524,7 +519,7 @@ class CookieManager {
     static getCookie(key) {
         let cookies = document.cookie.split(";").map((cookie) => {
             let parts = cookie.split("=");
-            return new Cookie(parts[0], parts[1]);
+            return new Cookie(parts[0].trim(), parts[1]);
         });
 
         return Optional.of(
