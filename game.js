@@ -1,14 +1,10 @@
+import { GameState } from "./gameState.js";
+
 const MoveDirection = {
     UP: "up",
     DOWN: "down",
     LEFT: "left",
     RIGHT: "right",
-};
-
-const GameState = {
-    NEW_GAME: "newGame",
-    RUNNING: "running",
-    GAME_OVER: "gameOver",
 };
 
 const KeyCode = {
@@ -32,7 +28,7 @@ let gameViewSize = new Size(0, 0);
 let gameState = GameState.NEW_GAME;
 let isMobile = false;
 let moveCounter = 0;
-let gameSpeed = 1
+let gameSpeed = 1;
 
 window.addEventListener("DOMContentLoaded", () => {
     let canvas = document.getElementById("gameBox");
@@ -115,7 +111,11 @@ window.addEventListener("DOMContentLoaded", () => {
                 food.draw();
                 snake.draw();
                 drawScore(ctx, score);
-                drawText(ctx, `Current game speed is: ${gameSpeed}`, () => new Point(300, 20));
+                drawText(
+                    ctx,
+                    `Current game speed is: ${gameSpeed}`,
+                    () => new Point(300, 20)
+                );
             } else if (gameState == GameState.GAME_OVER) {
                 drawGameOverState(ctx, highscore);
             }
@@ -124,19 +124,19 @@ window.addEventListener("DOMContentLoaded", () => {
 
     function increaseGameDifficultyLevel(score) {
         if (score >= 10 && score < 20) {
-            gameSpeed = 1.5
+            gameSpeed = 1.5;
         } else if (score >= 20 && score < 30) {
-            gameSpeed = 2.0
+            gameSpeed = 2.0;
         } else if (score >= 30 && score < 50) {
-            gameSpeed = 2.5
+            gameSpeed = 2.5;
         } else if (score >= 50 && score < 100) {
-            gameSpeed = 3
+            gameSpeed = 3;
         } else if (score >= 100 && score < 150) {
-            gameSpeed = 3.5
+            gameSpeed = 3.5;
         } else if (score >= 150 && score < 300) {
-            gameSpeed = 4
+            gameSpeed = 4;
         } else if (score >= 300) {
-            gameSpeed = 5
+            gameSpeed = 5;
         }
     }
 
@@ -156,6 +156,7 @@ window.addEventListener("DOMContentLoaded", () => {
         food.relocate();
         direction = MoveDirection.RIGHT;
         gameState = GameState.GAME_OVER;
+        gameSpeed = 1;
     }
 
     function registerKeyEventsListener() {
@@ -374,16 +375,10 @@ class Food {
     }
 
     relocate() {
-        let availableSpace = (gameViewSize.height - this.size) / this.size;
-
-        // let x = Math.round(Math.random() * availableSpace);
-        // let y = Math.round(Math.random() * availableSpace);
-        let x = this.rand_10(0, gameViewSize.height - this.size);
-        let y = this.rand_10(0, gameViewSize.height - this.size);
+        let x = this.rand_10(0, gameViewSize.width - this.size * 2);
+        let y = this.rand_10(0, gameViewSize.height - this.size * 2);
 
         this.position = new Point(x, y);
-
-        // this.draw(this.position);
     }
 
     rand_10(min, max) {
