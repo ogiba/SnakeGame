@@ -1,11 +1,5 @@
 import { GameState } from "./gameState.js";
-
-const MoveDirection = {
-    UP: "up",
-    DOWN: "down",
-    LEFT: "left",
-    RIGHT: "right",
-};
+import { MoveDirection } from "./moveDirection.js";
 
 const KeyCode = {
     LEFT_ARROW: 37,
