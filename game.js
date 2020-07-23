@@ -1,13 +1,7 @@
 import { GameState } from "./gameState.js";
 import { MoveDirection } from "./moveDirection.js";
 import { KeyCode } from "./keyCode.js";
-
-class Size {
-    constructor(width, height) {
-        this.width = width;
-        this.height = height;
-    }
-}
+import { Size } from "./size.js";
 
 let snakeSize = 10;
 let direction = MoveDirection.RIGHT;
